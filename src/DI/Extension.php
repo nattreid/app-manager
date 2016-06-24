@@ -50,6 +50,15 @@ class Extension extends \Nette\DI\CompilerExtension {
         $builder->addDefinition($this->prefix('logs'))
                 ->setClass('NAttreid\AppManager\Logs')
                 ->setArguments([ $config['logDir']]);
+
+        $builder->addDefinition($this->prefix('router'))
+                ->setClass('NAttreid\AppManager\Control\DeployRouter');
+    }
+
+    public function beforeCompile() {
+        $builder = $this->getContainerBuilder();
+        $builder->getDefinition($this->prefix('routerFactory'))
+                ->addSetup('addRouter', ['@' . $this->prefix('router'), 0]);
     }
 
 }
