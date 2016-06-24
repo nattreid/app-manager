@@ -26,18 +26,18 @@ class Extension extends \Nette\DI\CompilerExtension {
         $builder = $this->getContainerBuilder();
         $config = $this->validateConfig($this->defaults, $this->getConfig());
 
-        $config['appDir'] = Nette\DI\Helpers::expand($config['appDir'], $this->getContainerBuilder()->parameters);
-        $config['wwwDir'] = Nette\DI\Helpers::expand($config['wwwDir'], $this->getContainerBuilder()->parameters);
-        $config['tempDir'] = Nette\DI\Helpers::expand($config['tempDir'], $this->getContainerBuilder()->parameters);
-        $config['logDir'] = Nette\DI\Helpers::expand($config['logDir'], $this->getContainerBuilder()->parameters);
-        $config['sessionDir'] = Nette\DI\Helpers::expand($config['sessionDir'], $this->getContainerBuilder()->parameters);
+        $config['appDir'] = \Nette\DI\Helpers::expand($config['appDir'], $this->getContainerBuilder()->parameters);
+        $config['wwwDir'] = \Nette\DI\Helpers::expand($config['wwwDir'], $this->getContainerBuilder()->parameters);
+        $config['tempDir'] = \Nette\DI\Helpers::expand($config['tempDir'], $this->getContainerBuilder()->parameters);
+        $config['logDir'] = \Nette\DI\Helpers::expand($config['logDir'], $this->getContainerBuilder()->parameters);
+        $config['sessionDir'] = \Nette\DI\Helpers::expand($config['sessionDir'], $this->getContainerBuilder()->parameters);
 
         $deploy = $config['deploy'];
         $builder->addDefinition($this->prefix('composer'))
-                ->setClass('NAttreid\AppManager\Composer')
+                ->setClass('NAttreid\AppManager\Deploy\Composer')
                 ->setArguments([$config['appDir'], $config['tempDir'], $deploy['projectUrl'], $deploy['ip']]);
         $builder->addDefinition($this->prefix('gitlab'))
-                ->setClass('NAttreid\AppManager\Gitlab')
+                ->setClass('NAttreid\AppManager\Deploy\Gitlab')
                 ->setArguments([ $config['appDir'], $deploy['projectUrl'], $deploy['ip']]);
 
         $builder->addDefinition($this->prefix('appManager'))
@@ -57,8 +57,14 @@ class Extension extends \Nette\DI\CompilerExtension {
 
     public function beforeCompile() {
         $builder = $this->getContainerBuilder();
-        $builder->getDefinition($this->prefix('routerFactory'))
+        $router = $builder->getByType('NAttreid\Routers\RouterFactory');
+        $builder->getDefinition($router)
                 ->addSetup('addRouter', ['@' . $this->prefix('router'), 0]);
+
+        $builder->getDefinition('presenterFactory')
+                ->addSetup('setMapping', array(
+                    array('AppManager' => 'NAttreid\AppManager\Control\*Presenter')
+        ));
     }
 
 }

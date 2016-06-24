@@ -19,3 +19,5 @@ appManager:
         sessionDir: %sessionDir%
         sessionExpiration: '14 days'
 ```
+
+## Údržba stránek

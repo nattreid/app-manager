@@ -2,6 +2,8 @@
 
 namespace NAttreid\AppManager\Control;
 
+use Nette\Application\Routers\Route;
+
 /**
  * Deploy router
  *
@@ -12,7 +14,7 @@ class DeployRouter extends \NAttreid\Routers\Router {
     public function createRoutes() {
         $router = $this->getRouter();
 
-        $router[] = new Route('deploy/', 'Application:deploy');
+        $router[] = new Route('deploy/', 'AppManager:Deploy:deploy');
     }
 
 }

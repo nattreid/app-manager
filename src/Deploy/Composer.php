@@ -21,7 +21,7 @@ class Composer extends Deploy {
     private $composer = '/composer.phar';
 
     /** @var string */
-    private $path, $tempDir, $composer;
+    private $path, $tempDir;
 
     public function __construct($appDir, $tempDir, $url, $ip, Request $request) {
         parent::__construct($request, $url, $ip);
