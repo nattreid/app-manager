@@ -61,7 +61,7 @@ class Extension extends \Nette\DI\CompilerExtension {
         $builder->getDefinition($router)
                 ->addSetup('addRouter', ['@' . $this->prefix('router'), 0]);
 
-        $builder->getDefinition('presenterFactory')
+        $builder->getDefinition('application.presenterFactory')
                 ->addSetup('setMapping', array(
                     array('AppManager' => 'NAttreid\AppManager\Control\*Presenter')
         ));
