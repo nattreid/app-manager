@@ -52,7 +52,7 @@ class Extension extends \Nette\DI\CompilerExtension {
                 ->setArguments([ $config['logDir']]);
 
         $builder->addDefinition($this->prefix('router'))
-                ->setClass('NAttreid\AppManager\Control\DeployRouter');
+                ->setClass('NAttreid\AppManager\Control\Router');
     }
 
     public function beforeCompile() {

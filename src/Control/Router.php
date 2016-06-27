@@ -5,11 +5,11 @@ namespace NAttreid\AppManager\Control;
 use Nette\Application\Routers\Route;
 
 /**
- * Deploy router
+ * Router
  *
  * @author Attreid <attreid@gmail.com>
  */
-class DeployRouter extends \NAttreid\Routers\Router {
+class Router extends \NAttreid\Routers\Router {
 
     public function createRoutes() {
         $router = $this->getRouter();
