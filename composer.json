@@ -21,9 +21,9 @@
         "nette/caching": "~2.3",
         "nette/di": "~2.3",
         "tracy/tracy": "~2.3",
-        "nattreid/utils": "dev-master",
-        "nattreid/webloader": "dev-master",
-        "nattreid/routing": "dev-master"
+        "nattreid/utils": "~1.0",
+        "nattreid/webloader": "~2.5",
+        "nattreid/routing": "~1.0"
     },
     "require-dev": {
         "nette/tester": "~1.6"
