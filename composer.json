@@ -19,7 +19,7 @@
         "php": ">= 5.6",
         "nette/utils": "~2.3",
         "nette/caching": "~2.3",
-        "nette/database": "~2.3",
+        "nette/di": "~2.3",
         "tracy/tracy": "~2.3",
         "nattreid/utils": "dev-master",
         "nattreid/webloader": "dev-master",
