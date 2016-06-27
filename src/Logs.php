@@ -66,8 +66,8 @@ class Logs {
             if ($file == '.' || $file == '..' || $file == 'web.config' || $file == '.htaccess') {
                 continue;
             } else {
-                $hasher = new Hasher('g4s8sdf339r');
-                $hash = $hasher->hash($file);
+                $salt = 'g4s8sdf339r';
+                $hash = md5($file . $salt);
                 $logs[$hash] = [
                     'id' => $hash,
                     'name' => $file,
