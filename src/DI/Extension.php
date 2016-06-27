@@ -59,7 +59,7 @@ class Extension extends \Nette\DI\CompilerExtension {
         $builder = $this->getContainerBuilder();
         $router = $builder->getByType('NAttreid\Routers\RouterFactory');
         $builder->getDefinition($router)
-                ->addSetup('addRouter', ['@' . $this->prefix('router'), 0]);
+                ->addSetup('addRouter', ['@' . $this->prefix('router'), 1]);
 
         $builder->getDefinition('application.presenterFactory')
                 ->addSetup('setMapping', array(
