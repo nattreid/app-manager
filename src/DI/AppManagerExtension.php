@@ -7,7 +7,7 @@ namespace NAttreid\AppManager\DI;
  * 
  * @author Attreid <attreid@gmail.com>
  */
-class Extension extends \Nette\DI\CompilerExtension {
+class AppManagerExtension extends \Nette\DI\CompilerExtension {
 
     private $defaults = [
         'deploy' => [

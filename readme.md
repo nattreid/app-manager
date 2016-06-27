@@ -3,7 +3,7 @@
 Nastavení v **config.neon**
 ```neon
 extensions:
-    appManager: NAtrreid\AppManager\DI\Extension
+    appManager: NAtrreid\AppManager\DI\AppManagerExtension
 ```
 
 dostupné nastavení
