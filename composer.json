@@ -23,7 +23,7 @@
         "tracy/tracy": "~2.3",
         "nattreid/utils": "dev-master",
         "nattreid/webloader": "dev-master",
-        "nattreid/routers": "dev-master"
+        "nattreid/routing": "dev-master"
     },
     "require-dev": {
         "nette/tester": "~1.6"
