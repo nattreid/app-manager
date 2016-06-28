@@ -1,6 +1,6 @@
 <?php
 
-namespace NAttreid\AppManager\Control;
+namespace NAttreid\AppManager\Routing;
 
 use Nette\Application\Routers\Route;
 
