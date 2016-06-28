@@ -58,9 +58,13 @@ class AppManagerExtension extends \Nette\DI\CompilerExtension {
     public function beforeCompile() {
         $builder = $this->getContainerBuilder();
         $router = $builder->getByType('NAttreid\Routing\RouterFactory');
-        $builder->getDefinition($router)
+        try {
+            $builder->getDefinition($router)
                 ->addSetup('addRouter', ['@' . $this->prefix('router'), 1]);
-
+        } catch (\Nette\DI\MissingServiceException $ex) {
+            throw new \Nette\DI\MissingServiceException("Missing extension 'nattreid/routing'");
+        }
+        
         $builder->getDefinition('application.presenterFactory')
                 ->addSetup('setMapping', [
                     ['AppManager' => 'NAttreid\AppManager\Control\*Presenter']
