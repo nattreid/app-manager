@@ -62,9 +62,9 @@ class AppManagerExtension extends \Nette\DI\CompilerExtension {
                 ->addSetup('addRouter', ['@' . $this->prefix('router'), 1]);
 
         $builder->getDefinition('application.presenterFactory')
-                ->addSetup('setMapping', array(
-                    array('AppManager' => 'NAttreid\AppManager\Control\*Presenter')
-        ));
+                ->addSetup('setMapping', [
+                    ['AppManager' => 'NAttreid\AppManager\Control\*Presenter']
+        ]);
     }
 
 }
