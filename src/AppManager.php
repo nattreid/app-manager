@@ -41,7 +41,7 @@ class AppManager extends \Nette\Object {
         $this->tempDir = $tempDir;
         $this->logDir = $logDir;
         $this->sessionDir = $sessionDir;
-        $this->webLoaderDir = \WebLoader\Nette\Extension::DEFAULT_TEMP_PATH;
+        $this->webLoaderDir = $wwwDir . '/' . \WebLoader\Nette\Extension::DEFAULT_TEMP_PATH;
         $this->sessionExpiration = $sessionExpiration;
 
         $this->cache = new Cache($cacheStorage);
@@ -57,10 +57,12 @@ class AppManager extends \Nette\Object {
      */
     public function clearCache() {
         File::removeDir($this->tempDir . '/cache', FALSE);
-        foreach (Finder::findFiles('*')
-                ->exclude('.htaccess', 'web.config')
-                ->in($this->wwwDir . '/' . $this->webLoaderDir) as $file) {
-            unlink($file);
+        if (file_exists($this->webLoaderDir)) {
+            foreach (Finder::findFiles('*')
+                    ->exclude('.htaccess', 'web.config')
+                    ->in($this->webLoaderDir) as $file) {
+                unlink($file);
+            }
         }
     }
 
@@ -119,10 +121,12 @@ class AppManager extends \Nette\Object {
      * Smaze CSS cache
      */
     public function clearCss() {
-        foreach (Finder::findFiles('*.css')
-                ->exclude('.htaccess', 'web.config')
-                ->in($this->wwwDir . '/' . $this->webLoaderDir) as $file) {
-            unlink($file);
+        if (file_exists($this->webLoaderDir)) {
+            foreach (Finder::findFiles('*.css')
+                    ->exclude('.htaccess', 'web.config')
+                    ->in($this->webLoaderDir) as $file) {
+                unlink($file);
+            }
         }
     }
 
@@ -130,10 +134,12 @@ class AppManager extends \Nette\Object {
      * Smaze Javascript cache
      */
     public function clearJs() {
-        foreach (Finder::findFiles('*.js')
-                ->exclude('.htaccess', 'web.config')
-                ->in($this->wwwDir . '/' . $this->webLoaderDir) as $file) {
-            unlink($file);
+        if (file_exists($this->webLoaderDir)) {
+            foreach (Finder::findFiles('*.js')
+                    ->exclude('.htaccess', 'web.config')
+                    ->in($this->webLoaderDir) as $file) {
+                unlink($file);
+            }
         }
     }
 
