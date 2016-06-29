@@ -18,7 +18,9 @@ use NAttreid\Utils\File,
  * 
  * @todo predelat repository cache
  */
-class AppManager extends \Nette\Object {
+class AppManager {
+
+    use \Nette\SmartObject;
 
     /** @var string */
     private $appDir, $wwwDir, $tempDir, $logDir, $sessionDir, $sessionExpiration, $webLoaderDir;
