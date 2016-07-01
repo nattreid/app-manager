@@ -9,7 +9,7 @@ use NAttreid\Utils\File,
     Tracy\Debugger,
     NAttreid\AppManager\Deploy\Gitlab,
     NAttreid\AppManager\Deploy\Composer,
-    Nette\Database\Context;
+    Nextras\Dbal\Connection;
 
 /**
  * Sprava aplikace
@@ -31,13 +31,13 @@ class AppManager {
     /** @var Composer */
     private $composer;
 
-    /** @var Context */
+    /** @var Connection */
     private $db;
 
     /** @var Cache */
     private $cache;
 
-    public function __construct($appDir, $wwwDir, $tempDir, $logDir, $sessionDir, $sessionExpiration, IStorage $cacheStorage, Gitlab $gitlab, Composer $composer, Context $db) {
+    public function __construct($appDir, $wwwDir, $tempDir, $logDir, $sessionDir, $sessionExpiration, IStorage $cacheStorage, Gitlab $gitlab, Composer $composer, Connection $db) {
         $this->appDir = $appDir;
         $this->wwwDir = $wwwDir;
         $this->tempDir = $tempDir;
@@ -115,7 +115,7 @@ class AppManager {
      */
     public function cleanModelCache() {
         $this->cache->clean([
-            Cache::TAGS => [ \App\Core\Model\Repository::TAG_DATABASE]
+            Cache::TAGS => [\NAttreid\Orm\Mapper::TAG_MODEL]
         ]);
     }
 
