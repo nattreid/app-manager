@@ -20,6 +20,12 @@ appManager:
         sessionExpiration: '14 days'
 ```
 
+použití
+```php
+/** @var \NAttreid\AppManager\AppManager @inject */
+public $app;
+```
+
 ## Údržba stránek
 Přidejte do **index.php**. Soubor **.maintenance.php** se zobrazí pouze když bude údžba zapnutá. Vypnout se dá přidáním parametru do url **maintenanceOff** nebo pres konzoli *php index.php maintenanceOff*
 ```php
@@ -32,4 +38,12 @@ if (file_exists($maintenance)) {
     }
     require '.maintenance.php';
 }
+```
+
+## Invalidace cache
+Pro invalidaci pomocí metody je třeba přidat
+```php
+$app->onInvalideCache[]=function(){
+    $this->cache->clean();
+};
 ```

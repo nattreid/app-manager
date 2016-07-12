@@ -33,10 +33,10 @@ class AppManager {
     /** @var Connection */
     private $db;
 
-    /** @var Cache */
-    private $cache;
+    /** @var callable[] */
+    public $onInvalidateCache = [];
 
-    public function __construct($appDir, $wwwDir, $tempDir, $logDir, $sessionDir, $sessionExpiration, IStorage $cacheStorage, Gitlab $gitlab, Composer $composer, Connection $db) {
+    public function __construct($appDir, $wwwDir, $tempDir, $logDir, $sessionDir, $sessionExpiration, Gitlab $gitlab, Composer $composer, Connection $db) {
         $this->appDir = $appDir;
         $this->wwwDir = $wwwDir;
         $this->tempDir = $tempDir;
@@ -44,8 +44,6 @@ class AppManager {
         $this->sessionDir = $sessionDir;
         $this->webLoaderDir = $wwwDir . '/' . \WebLoader\Nette\Extension::DEFAULT_TEMP_PATH;
         $this->sessionExpiration = $sessionExpiration;
-
-        $this->cache = new Cache($cacheStorage);
 
         $this->gitlab = $gitlab;
         $this->composer = $composer;
@@ -109,13 +107,12 @@ class AppManager {
     }
 
     /**
-     * Smaze cache modelu
-     * @todo predelat repository cache
+     * Invaliduje cache
      */
-    public function cleanModelCache() {
-        $this->cache->clean([
-            Cache::TAGS => [\NAttreid\Orm\Mapper::TAG_MODEL]
-        ]);
+    public function invalidateCache() {
+        foreach ($this->onInvalidateCache as $func) {
+            $func();
+        }
     }
 
     /**
