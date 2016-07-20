@@ -2,6 +2,14 @@
 
 namespace NAttreid\AppManager\DI;
 
+use NAttreid\AppManager\Deploy\Composer,
+    NAttreid\AppManager\Deploy\Gitlab,
+    NAttreid\AppManager\AppManager,
+    NAttreid\AppManager\Info,
+    NAttreid\AppManager\Logs,
+    NAttreid\AppManager\Routing\Router,
+    NAttreid\Routing\RouterFactory;
+
 /**
  * Rozsireni
  * 
@@ -34,37 +42,37 @@ class AppManagerExtension extends \Nette\DI\CompilerExtension {
 
         $deploy = $config['deploy'];
         $builder->addDefinition($this->prefix('composer'))
-                ->setClass('NAttreid\AppManager\Deploy\Composer')
+                ->setClass(Composer::class)
                 ->setArguments([$config['appDir'], $config['tempDir'], $deploy['projectUrl'], $deploy['ip']]);
         $builder->addDefinition($this->prefix('gitlab'))
-                ->setClass('NAttreid\AppManager\Deploy\Gitlab')
+                ->setClass(Gitlab::class)
                 ->setArguments([ $config['appDir'], $deploy['projectUrl'], $deploy['ip']]);
 
         $builder->addDefinition($this->prefix('appManager'))
-                ->setClass('NAttreid\AppManager\AppManager')
+                ->setClass(AppManager::class)
                 ->setArguments([ $config['appDir'], $config['wwwDir'], $config['tempDir'], $config['logDir'], $config['sessionDir'], $config['sessionExpiration']]);
 
         $builder->addDefinition($this->prefix('info'))
-                ->setClass('NAttreid\AppManager\Info');
+                ->setClass(Info::class);
 
         $builder->addDefinition($this->prefix('logs'))
-                ->setClass('NAttreid\AppManager\Logs')
+                ->setClass(Logs::class)
                 ->setArguments([ $config['logDir']]);
 
         $builder->addDefinition($this->prefix('router'))
-                ->setClass('NAttreid\AppManager\Routing\Router');
+                ->setClass(Router::class);
     }
 
     public function beforeCompile() {
         $builder = $this->getContainerBuilder();
-        $router = $builder->getByType('NAttreid\Routing\RouterFactory');
+        $router = $builder->getByType(RouterFactory::class);
         try {
             $builder->getDefinition($router)
-                ->addSetup('addRouter', ['@' . $this->prefix('router'), 1]);
+                    ->addSetup('addRouter', ['@' . $this->prefix('router'), 1]);
         } catch (\Nette\DI\MissingServiceException $ex) {
             throw new \Nette\DI\MissingServiceException("Missing extension 'nattreid/routing'");
         }
-        
+
         $builder->getDefinition('application.presenterFactory')
                 ->addSetup('setMapping', [
                     ['AppManager' => 'NAttreid\AppManager\Control\*Presenter']
