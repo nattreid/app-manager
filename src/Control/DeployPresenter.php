@@ -2,6 +2,8 @@
 
 namespace NAttreid\AppManager\Control;
 
+use NAttreid\AppManager\AppManager;
+
 /**
  * Deploy presenter
  *
@@ -9,8 +11,13 @@ namespace NAttreid\AppManager\Control;
  */
 class DeployPresenter extends \Nette\Application\UI\Presenter {
 
-    /** @var \NAttreid\AppManager\AppManager @inject */
-    public $app;
+    /** @var AppManager */
+    private $app;
+
+    public function __construct(AppManager $app) {
+        parent::__construct();
+        $this->app = $app;
+    }
 
     /**
      * Hook pro deploy z gitlabu
