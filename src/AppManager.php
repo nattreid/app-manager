@@ -4,8 +4,6 @@ namespace NAttreid\AppManager;
 
 use NAttreid\Utils\File,
     Nette\Utils\Finder,
-    Nette\Caching\Cache,
-    Nette\Caching\IStorage,
     NAttreid\AppManager\Deploy\Gitlab,
     NAttreid\AppManager\Deploy\Composer,
     Nextras\Dbal\Connection;
