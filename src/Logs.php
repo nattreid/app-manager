@@ -22,14 +22,18 @@ class Logs {
     /** @var string */
     private $path;
 
+    /** @var Hasher */
+    private $hasher;
+
     /** @var array */
     private $logs;
 
-    public function __construct($path) {
+    public function __construct($path, Hasher $hasher) {
         if (!\Nette\Utils\Strings::endsWith($path, DIRECTORY_SEPARATOR)) {
             $path .= DIRECTORY_SEPARATOR;
         }
         $this->path = $path;
+        $this->hasher = $hasher;
     }
 
     /**
@@ -66,8 +70,7 @@ class Logs {
             if ($file == '.' || $file == '..' || $file == 'web.config' || $file == '.htaccess') {
                 continue;
             } else {
-                $salt = 'g4s8sdf339r';
-                $hash = md5($file . $salt);
+                $hash = $this->hasher->hash($string);
                 $logs[$hash] = [
                     'id' => $hash,
                     'name' => $file,
