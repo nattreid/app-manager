@@ -31,7 +31,7 @@ abstract class Deploy {
      */
     protected function checkAccess() {
         if ($this->url === NULL || $this->ip === NULL) {
-            throw new \InvalidArgumentException('Neni nastaven deploy');
+            throw new \InvalidArgumentException('Deploy is not set');
         }
         $remoteAddress = $this->request->getRemoteAddress();
         if ($remoteAddress == $this->ip) {
