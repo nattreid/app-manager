@@ -75,7 +75,7 @@ class Logs {
                     'id' => $hash,
                     'name' => $file,
                     'size' => Number::size(filesize($this->path . $file)),
-                    'change' => filemtime($this->path . $file)
+                    'changed' => filemtime($this->path . $file)
                 ];
             }
         }
