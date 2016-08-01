@@ -70,7 +70,7 @@ class Logs {
             if ($file == '.' || $file == '..' || $file == 'web.config' || $file == '.htaccess') {
                 continue;
             } else {
-                $hash = $this->hasher->hash($string);
+                $hash = $this->hasher->hash($file);
                 $logs[$hash] = [
                     'id' => $hash,
                     'name' => $file,
