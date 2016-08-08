@@ -34,11 +34,11 @@ class AppManagerExtension extends \Nette\DI\CompilerExtension {
         $builder = $this->getContainerBuilder();
         $config = $this->validateConfig($this->defaults, $this->getConfig());
 
-        $config['appDir'] = \Nette\DI\Helpers::expand($config['appDir'], $this->getContainerBuilder()->parameters);
-        $config['wwwDir'] = \Nette\DI\Helpers::expand($config['wwwDir'], $this->getContainerBuilder()->parameters);
-        $config['tempDir'] = \Nette\DI\Helpers::expand($config['tempDir'], $this->getContainerBuilder()->parameters);
-        $config['logDir'] = \Nette\DI\Helpers::expand($config['logDir'], $this->getContainerBuilder()->parameters);
-        $config['sessionDir'] = \Nette\DI\Helpers::expand($config['sessionDir'], $this->getContainerBuilder()->parameters);
+        $config['appDir'] = \Nette\DI\Helpers::expand($config['appDir'], $builder->parameters);
+        $config['wwwDir'] = \Nette\DI\Helpers::expand($config['wwwDir'], $builder->parameters);
+        $config['tempDir'] = \Nette\DI\Helpers::expand($config['tempDir'], $builder->parameters);
+        $config['logDir'] = \Nette\DI\Helpers::expand($config['logDir'], $builder->parameters);
+        $config['sessionDir'] = \Nette\DI\Helpers::expand($config['sessionDir'], $builder->parameters);
 
         $deploy = $config['deploy'];
         $builder->addDefinition($this->prefix('composer'))
