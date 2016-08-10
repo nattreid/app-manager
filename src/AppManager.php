@@ -20,7 +20,10 @@ class AppManager {
     use \Nette\SmartObject;
 
     /** @var string */
-    private $appDir, $wwwDir, $tempDir, $logDir, $sessionDir, $sessionExpiration, $webLoaderDir;
+    private $appDir, $wwwDir, $tempDir, $logDir, $sessionDir, $sessionExpiration;
+
+    /** @var array */
+    private $webLoaderDir;
 
     /** @var Gitlab */
     private $gitlab;
@@ -34,13 +37,18 @@ class AppManager {
     /** @var callable[] */
     public $onInvalidateCache = [];
 
-    public function __construct($appDir, $wwwDir, $tempDir, $logDir, $sessionDir, $sessionExpiration, Gitlab $gitlab, Composer $composer, Connection $db) {
+    public function __construct($appDir, $wwwDir, $tempDir, $logDir, $sessionDir, $sessionExpiration, Gitlab $gitlab, Composer $composer, Connection $db, \WebLoader\Nette\LoaderFactory $loader = NULL) {
         $this->appDir = $appDir;
         $this->wwwDir = $wwwDir;
         $this->tempDir = $tempDir;
         $this->logDir = $logDir;
         $this->sessionDir = $sessionDir;
-        $this->webLoaderDir = $wwwDir . '/' . \WebLoader\Nette\Extension::DEFAULT_TEMP_PATH;
+
+        if ($loader !== NULL) {
+            foreach ($loader->getTempPaths() as $path) {
+                $this->webLoaderDir[] = $wwwDir . '/' . $path;
+            }
+        }
         $this->sessionExpiration = $sessionExpiration;
 
         $this->gitlab = $gitlab;
@@ -54,11 +62,13 @@ class AppManager {
      */
     public function clearCache() {
         File::removeDir($this->tempDir . '/cache', FALSE);
-        if (file_exists($this->webLoaderDir)) {
-            foreach (Finder::findFiles('*')
-                    ->exclude('.htaccess', 'web.config')
-                    ->in($this->webLoaderDir) as $file) {
-                unlink($file);
+        foreach ($this->webLoaderDir as $dir) {
+            if (file_exists($dir)) {
+                foreach (Finder::findFiles('*')
+                        ->exclude('.htaccess', 'web.config')
+                        ->in($dir) as $file) {
+                    unlink($file);
+                }
             }
         }
     }
@@ -117,11 +127,13 @@ class AppManager {
      * Smaze CSS cache
      */
     public function clearCss() {
-        if (file_exists($this->webLoaderDir)) {
-            foreach (Finder::findFiles('*.css')
-                    ->exclude('.htaccess', 'web.config')
-                    ->in($this->webLoaderDir) as $file) {
-                unlink($file);
+        foreach ($this->webLoaderDir as $dir) {
+            if (file_exists($dir)) {
+                foreach (Finder::findFiles('*.css')
+                        ->exclude('.htaccess', 'web.config')
+                        ->in($dir) as $file) {
+                    unlink($file);
+                }
             }
         }
     }
@@ -130,11 +142,13 @@ class AppManager {
      * Smaze Javascript cache
      */
     public function clearJs() {
-        if (file_exists($this->webLoaderDir)) {
-            foreach (Finder::findFiles('*.js')
-                    ->exclude('.htaccess', 'web.config')
-                    ->in($this->webLoaderDir) as $file) {
-                unlink($file);
+        foreach ($this->webLoaderDir as $dir) {
+            if (file_exists($dir)) {
+                foreach (Finder::findFiles('*.js')
+                        ->exclude('.htaccess', 'web.config')
+                        ->in($dir) as $file) {
+                    unlink($file);
+                }
             }
         }
     }
