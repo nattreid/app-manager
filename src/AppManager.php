@@ -98,8 +98,20 @@ class AppManager {
             unlink($file);
         }
         foreach (Finder::findDirectories('*')
-                ->in($this->tempDir) as $dir) {
-            File::removeDir($dir);
+                ->in($this->tempDir) as $dirname) {
+
+            foreach (Finder::findFiles('*')
+                    ->exclude('.htaccess', 'web.config')
+                    ->in($dirname) as $file) {
+                unlink($file);
+            }
+            foreach (Finder::findDirectories('*')
+                    ->in($dirname) as $dir) {
+                File::removeDir($dir);
+            }
+            if (File::isDirEmpty($dirname)) {
+                File::removeDir($dirname);
+            }
         }
     }
 
