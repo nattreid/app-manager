@@ -98,6 +98,7 @@ class AppManager {
             unlink($file);
         }
         foreach (Finder::findDirectories('*')
+                ->exclude(basename($this->sessionDir))
                 ->in($this->tempDir) as $dir) {
             File::removeDir($dir);
         }
