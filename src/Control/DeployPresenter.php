@@ -9,23 +9,26 @@ use NAttreid\AppManager\AppManager;
  *
  * @author Attreid <attreid@gmail.com>
  */
-class DeployPresenter extends \Nette\Application\UI\Presenter {
+class DeployPresenter extends \Nette\Application\UI\Presenter
+{
 
-    /** @var AppManager */
-    private $app;
+	/** @var AppManager */
+	private $app;
 
-    public function __construct(AppManager $app = NULL) {
-        parent::__construct();
-        $this->app = $app;
-    }
+	public function __construct(AppManager $app = NULL)
+	{
+		parent::__construct();
+		$this->app = $app;
+	}
 
-    /**
-     * Hook pro deploy z gitlabu
-     */
-    public function actionDeploy() {
-        $this->app->gitPull();
-        $this->app->composerUpdate();
-        $this->terminate();
-    }
+	/**
+	 * Hook pro deploy z gitlabu
+	 */
+	public function actionDeploy()
+	{
+		$this->app->gitPull();
+		$this->app->composerUpdate();
+		$this->terminate();
+	}
 
 }

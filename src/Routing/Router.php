@@ -9,12 +9,14 @@ use Nette\Application\Routers\Route;
  *
  * @author Attreid <attreid@gmail.com>
  */
-class Router extends \NAttreid\Routing\Router {
+class Router extends \NAttreid\Routing\Router
+{
 
-    public function createRoutes() {
-        $router = $this->getRouter();
+	public function createRoutes()
+	{
+		$router = $this->getRouter();
 
-        $router[] = new Route('deploy/', 'AppManagerExt:Deploy:deploy');
-    }
+		$router[] = new Route('deploy/', 'AppManagerExt:Deploy:deploy');
+	}
 
 }
