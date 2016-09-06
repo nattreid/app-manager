@@ -26,7 +26,7 @@ class Composer extends Deploy
 
 	public function __construct($appDir, $tempDir, $url, $ip, Request $request)
 	{
-		parent::__construct($request, $url, $ip);
+		parent::__construct($url, $ip, $request);
 		$this->path = $appDir . '/..';
 		$this->tempDir = $tempDir;
 	}

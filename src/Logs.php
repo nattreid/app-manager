@@ -6,7 +6,9 @@ use NAttreid\Utils\Date;
 use NAttreid\Utils\File;
 use NAttreid\Utils\Hasher;
 use NAttreid\Utils\Number;
+use NAttreid\Utils\TempFile;
 use Nette\Application\Responses\FileResponse;
+use Nette\IOException;
 use Nette\Utils\Strings;
 
 /**
@@ -69,7 +71,7 @@ class Logs
 		$logs = [];
 		$dir = @dir($this->path);
 		if (!$dir) {
-			throw new \Nette\IOException("getLogs: Failed opening directory '$this->path' for reading");
+			throw new IOException("getLogs: Failed opening directory '$this->path' for reading");
 		}
 		while ($file = $dir->read()) {
 			if ($file == '.' || $file == '..' || $file == 'web.config' || $file == '.htaccess') {
@@ -127,7 +129,7 @@ class Logs
 	public function downloadFile($id)
 	{
 		if (is_array($id)) {
-			$file = new \NAttreid\Utils\TempFile;
+			$file = new TempFile;
 			$name = 'Logs_' . Date::getCurrentTimeStamp() . '.zip';
 			$archive = [];
 			foreach ($id as $i) {

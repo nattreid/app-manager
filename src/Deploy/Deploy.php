@@ -19,11 +19,11 @@ abstract class Deploy
 	/** @var Request */
 	private $request;
 
-	public function __construct(Request $request, $url, $ip)
+	public function __construct($url, $ip, Request $request)
 	{
-		$this->request = $request;
 		$this->url = $url;
 		$this->ip = $ip;
+		$this->request = $request;
 	}
 
 	/**

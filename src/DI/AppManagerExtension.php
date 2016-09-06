@@ -9,6 +9,7 @@ use NAttreid\AppManager\Info;
 use NAttreid\AppManager\Logs;
 use NAttreid\AppManager\Routing\Router;
 use NAttreid\Routing\RouterFactory;
+use Nette\DI\MissingServiceException;
 
 /**
  * Rozsireni
@@ -72,8 +73,8 @@ class AppManagerExtension extends \Nette\DI\CompilerExtension
 		try {
 			$builder->getDefinition($router)
 				->addSetup('addRouter', ['@' . $this->prefix('router'), RouterFactory::PRIORITY_SYSTEM]);
-		} catch (\Nette\DI\MissingServiceException $ex) {
-			throw new \Nette\DI\MissingServiceException("Missing extension 'nattreid/routing'");
+		} catch (MissingServiceException $ex) {
+			throw new MissingServiceException("Missing extension 'nattreid/routing'");
 		}
 
 		$builder->getDefinition('application.presenterFactory')

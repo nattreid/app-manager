@@ -20,7 +20,7 @@ class Gitlab extends Deploy
 
 	public function __construct($appDir, $url, $ip, Request $request)
 	{
-		parent::__construct($request, $url, $ip);
+		parent::__construct($url, $ip, $request);
 		$this->path = $appDir . '/..';
 	}
 

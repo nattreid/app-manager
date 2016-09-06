@@ -2,9 +2,11 @@
 
 namespace NAttreid\AppManager;
 
+use InvalidArgumentException;
 use NAttreid\AppManager\Deploy\Composer;
 use NAttreid\AppManager\Deploy\Gitlab;
 use NAttreid\Utils\File;
+use NAttreid\Utils\TempFile;
 use Nette\Utils\Finder;
 use Nextras\Dbal\Connection;
 
@@ -193,7 +195,7 @@ class AppManager
 	/**
 	 * Aktualizace zdrojovych kodu pomoci composeru
 	 * @param boolean $force
-	 * @throws \InvalidArgumentException
+	 * @throws InvalidArgumentException
 	 */
 	public function composerUpdate($force = FALSE)
 	{
@@ -209,7 +211,7 @@ class AppManager
 	/**
 	 * Deploy
 	 * @param boolean $force
-	 * @throws \InvalidArgumentException
+	 * @throws InvalidArgumentException
 	 */
 	public function gitPull($force = FALSE)
 	{
@@ -224,11 +226,11 @@ class AppManager
 
 	/**
 	 * Vrati zalohu databaze
-	 * @return \NAttreid\Utils\TempFile
+	 * @return TempFile
 	 */
 	public function backupDatabase()
 	{
-		$backup = new \NAttreid\Utils\TempFile('backup.sql', TRUE);
+		$backup = new TempFile('backup.sql', TRUE);
 		$tables = $this->db->getPlatform()->getTables();
 
 		$backup->write("SET NAMES utf8;\n");
@@ -273,7 +275,7 @@ class AppManager
 		}
 
 		// zip
-		$archive = new \NAttreid\Utils\TempFile;
+		$archive = new TempFile;
 		File::zip($backup, $archive);
 
 		return $archive;

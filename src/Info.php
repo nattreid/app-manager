@@ -144,6 +144,7 @@ class Info
 			unset($load[3], $load[4]);
 			return implode(' ', $load);
 		}
+		return NULL;
 	}
 
 	/**
@@ -265,7 +266,7 @@ class Info
 			// sparc64 specific code ends
 			// XScale detection code
 			if (($arch === "5TE") && ($cpu->bogomips != NULL)) {
-				$cpu->speed($cpu->bogomips); //BogoMIPS are not BogoMIPS on this CPU, it's the speed
+				$cpu->speed = $cpu->bogomips; //BogoMIPS are not BogoMIPS on this CPU, it's the speed
 				$cpu->bogomips = NULL; // no BogoMIPS available, unset previously set BogoMIPS
 			}
 
