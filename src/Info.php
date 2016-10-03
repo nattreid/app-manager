@@ -52,16 +52,16 @@ class Info
 	 * @param string $explode
 	 * @return string
 	 */
-	private function readFile($file, $explode = NULL)
+	private function readFile($file, $explode = null)
 	{
 		$result = @file_get_contents($file);
 		if (!empty($result)) {
-			if ($explode !== NULL) {
+			if ($explode !== null) {
 				return explode($explode, $result);
 			}
 			return $result;
 		}
-		return NULL;
+		return null;
 	}
 
 	/**
@@ -70,17 +70,17 @@ class Info
 	 * @param string $explode
 	 * @return string|array
 	 */
-	private function readCommand($command, $explode = NULL)
+	private function readCommand($command, $explode = null)
 	{
 		exec($command, $result);
 		if (!empty($result)) {
 			$result = implode("\n", $result);
-			if ($explode !== NULL) {
+			if ($explode !== null) {
 				return explode($explode, $result);
 			}
 			return $result;
 		}
-		return NULL;
+		return null;
 	}
 
 	/**
@@ -144,7 +144,7 @@ class Info
 			unset($load[3], $load[4]);
 			return implode(' ', $load);
 		}
-		return NULL;
+		return null;
 	}
 
 	/**
@@ -161,9 +161,9 @@ class Info
 		$biosDate = $this->readFile('/sys/devices/virtual/dmi/id/bios_date');
 
 		$server = $product
-			. (!empty($board) ? '/' . $board : NULL)
-			. (!empty($bios) ? ', BIOS ' . $bios : NULL)
-			. (!empty($biosDate) ? ' ' . $biosDate : NULL);
+			. (!empty($board) ? '/' . $board : null)
+			. (!empty($bios) ? ', BIOS ' . $bios : null)
+			. (!empty($biosDate) ? ' ' . $biosDate : null);
 		if ($server) {
 			$hardware->server = $server;
 		}
@@ -186,15 +186,15 @@ class Info
 		$result = [];
 		$cpuInfo = $this->readFile('/proc/cpuinfo');
 		if (empty($cpuInfo)) {
-			return NULL;
+			return null;
 		}
 
 		$processors = preg_split('/\s?\n\s?\n/', trim($cpuInfo));
-		$procname = NULL;
+		$procname = null;
 		foreach ($processors as $processor) {
 			$cpu = new \stdClass;
-			$proc = NULL;
-			$arch = NULL;
+			$proc = null;
+			$arch = null;
 			$details = preg_split("/\n/", $processor, -1, PREG_SPLIT_NO_EMPTY);
 			foreach ($details as $detail) {
 				$arrBuff = preg_split('/\s*:\s*/', trim($detail));
@@ -240,7 +240,7 @@ class Info
 							break;
 						case 'i size':
 						case 'd size':
-							if ($cpu->cache === NULL) {
+							if ($cpu->cache === null) {
 								$cpu->cache = $arrBuff[1] * 1024;
 							} else {
 								$cpu->cache = $cpu->cache + ($arrBuff[1] * 1024);
@@ -265,12 +265,12 @@ class Info
 			}
 			// sparc64 specific code ends
 			// XScale detection code
-			if (($arch === "5TE") && ($cpu->bogomips != NULL)) {
+			if (($arch === "5TE") && ($cpu->bogomips != null)) {
 				$cpu->speed = $cpu->bogomips; //BogoMIPS are not BogoMIPS on this CPU, it's the speed
-				$cpu->bogomips = NULL; // no BogoMIPS available, unset previously set BogoMIPS
+				$cpu->bogomips = null; // no BogoMIPS available, unset previously set BogoMIPS
 			}
 
-			if ($proc != NULL) {
+			if ($proc != null) {
 				if (!is_numeric($proc)) {
 					$proc = 0;
 				}
@@ -291,7 +291,7 @@ class Info
 				}
 			}
 
-			$cpu->usage = NULL;
+			$cpu->usage = null;
 			$result[] = $cpu;
 		}
 
@@ -350,7 +350,7 @@ class Info
 				$get_type = false;
 			}
 		}
-		return empty($scsi) ? NULL : $scsi;
+		return empty($scsi) ? null : $scsi;
 	}
 
 	/**
@@ -363,7 +363,7 @@ class Info
 		$bufer = preg_split("/\n/", $this->readFile('/proc/meminfo'), -1, PREG_SPLIT_NO_EMPTY);
 
 		if (empty($bufer)) {
-			return NULL;
+			return null;
 		}
 
 		foreach ($bufer as $buf) {
@@ -396,7 +396,7 @@ class Info
 			$swap->free = $swap->total - $swap->used;
 			$memory->swap[] = $swap;
 		}
-		return empty($memory->used) ? NULL : $memory;
+		return empty($memory->used) ? null : $memory;
 	}
 
 	/**
@@ -429,7 +429,7 @@ class Info
 
 	/**
 	 * Vrati informace o siti
-	 * @return \stdClass[]|NULL
+	 * @return \stdClass[]|null
 	 */
 	private function getNetworkInfo()
 	{
@@ -460,7 +460,7 @@ class Info
 			}
 			$network[] = $dev;
 		}
-		return empty($network) ? NULL : $network;
+		return empty($network) ? null : $network;
 	}
 
 }

@@ -33,7 +33,7 @@ abstract class Deploy
 	 */
 	protected function checkAccess()
 	{
-		if ($this->url === NULL || $this->ip === NULL) {
+		if ($this->url === null || $this->ip === null) {
 			throw new \InvalidArgumentException('Deploy is not set');
 		}
 		$remoteAddress = $this->request->getRemoteAddress();
@@ -44,13 +44,13 @@ abstract class Deploy
 			if ($data) {
 				if (isset($data->repository->url)) {
 					if ($this->url == (string)$data->repository->url) {
-						return TRUE;
+						return true;
 					}
 				}
 			}
 		}
 		Debugger::log('Unknown access from ' . $this->request->getRemoteHost() . '(' . $remoteAddress . ')', 'deploy');
-		return FALSE;
+		return false;
 	}
 
 }

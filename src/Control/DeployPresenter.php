@@ -15,7 +15,7 @@ class DeployPresenter extends \Nette\Application\UI\Presenter
 	/** @var AppManager */
 	private $app;
 
-	public function __construct(AppManager $app = NULL)
+	public function __construct(AppManager $app = null)
 	{
 		parent::__construct();
 		$this->app = $app;

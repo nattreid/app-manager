@@ -46,7 +46,7 @@ class Logs
 	 */
 	public function getLogs()
 	{
-		if ($this->logs === NULL) {
+		if ($this->logs === null) {
 			$this->logs = $this->readLogs();
 		}
 		return $this->logs;
@@ -102,7 +102,7 @@ class Logs
 		} else {
 			unlink($this->path . $this->getLog($id)['name']);
 		}
-		$this->logs = NULL;
+		$this->logs = null;
 	}
 
 	/**
@@ -118,7 +118,7 @@ class Logs
 		} else {
 			$contentType = 'text/plain';
 		}
-		return new FileResponse($this->path . $file, $file, $contentType, FALSE);
+		return new FileResponse($this->path . $file, $file, $contentType, false);
 	}
 
 	/**

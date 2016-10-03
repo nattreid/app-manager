@@ -40,7 +40,7 @@ class AppManager
 	/** @var callable[] */
 	public $onInvalidateCache = [];
 
-	public function __construct($appDir, $wwwDir, $tempDir, $logDir, $sessionDir, $sessionExpiration, Gitlab $gitlab, Composer $composer, Connection $db, \WebLoader\Nette\LoaderFactory $loader = NULL)
+	public function __construct($appDir, $wwwDir, $tempDir, $logDir, $sessionDir, $sessionExpiration, Gitlab $gitlab, Composer $composer, Connection $db, \WebLoader\Nette\LoaderFactory $loader = null)
 	{
 		$this->appDir = $appDir;
 		$this->wwwDir = $wwwDir;
@@ -48,7 +48,7 @@ class AppManager
 		$this->logDir = $logDir;
 		$this->sessionDir = $sessionDir;
 
-		if ($loader !== NULL) {
+		if ($loader !== null) {
 			foreach ($loader->getTempPaths() as $path) {
 				$this->webLoaderDir[] = $wwwDir . '/' . $path;
 			}
@@ -66,7 +66,7 @@ class AppManager
 	 */
 	public function clearCache()
 	{
-		File::removeDir($this->tempDir . '/cache', FALSE);
+		File::removeDir($this->tempDir . '/cache', false);
 		foreach ($this->webLoaderDir as $dir) {
 			if (file_exists($dir)) {
 				foreach (Finder::findFiles('*')
@@ -82,9 +82,9 @@ class AppManager
 	 * Smazani expirovane session (default je nastaven na maximalni dobu expirace session)
 	 * @param string $expiration format 1 minutes, 14 days atd
 	 */
-	public function clearSession($expiration = NULL)
+	public function clearSession($expiration = null)
 	{
-		if ($expiration === NULL) {
+		if ($expiration === null) {
 			$expiration = $this->sessionExpiration;
 		}
 		foreach (Finder::findFiles('*')->date('<', '- ' . $expiration)
@@ -180,7 +180,7 @@ class AppManager
 	 * Zapne nebo vypne udrzbu stranek (zobrazi se stranka udrzby)
 	 * @param boolean $set
 	 */
-	public function maintenance($set = TRUE)
+	public function maintenance($set = true)
 	{
 		$file = $this->tempDir . '/maintenance';
 		if ($set) {
@@ -197,7 +197,7 @@ class AppManager
 	 * @param boolean $force
 	 * @throws InvalidArgumentException
 	 */
-	public function composerUpdate($force = FALSE)
+	public function composerUpdate($force = false)
 	{
 		$this->maintenance();
 		if ($force) {
@@ -205,7 +205,7 @@ class AppManager
 		} else {
 			$this->composer->authorizedUpdate();
 		}
-		$this->maintenance(FALSE);
+		$this->maintenance(false);
 	}
 
 	/**
@@ -213,7 +213,7 @@ class AppManager
 	 * @param boolean $force
 	 * @throws InvalidArgumentException
 	 */
-	public function gitPull($force = FALSE)
+	public function gitPull($force = false)
 	{
 		$this->maintenance();
 		if ($force) {
@@ -221,7 +221,7 @@ class AppManager
 		} else {
 			$this->gitlab->authorizedUpdate();
 		}
-		$this->maintenance(FALSE);
+		$this->maintenance(false);
 	}
 
 	/**
@@ -230,7 +230,7 @@ class AppManager
 	 */
 	public function backupDatabase()
 	{
-		$backup = new TempFile('backup.sql', TRUE);
+		$backup = new TempFile('backup.sql', true);
 		$tables = $this->db->getPlatform()->getTables();
 
 		$backup->write("SET NAMES utf8;\n");
@@ -247,11 +247,11 @@ class AppManager
 
 			$rows = $this->db->query("SELECT * FROM %table", $tableName);
 			$insert = [];
-			$columns = NULL;
+			$columns = null;
 			foreach ($rows as $row) {
 				$field = $row->toArray();
 
-				if ($columns === NULL) {
+				if ($columns === null) {
 					$colName = [];
 					foreach ($field as $key => $value) {
 						$colName[] = "`$key`";

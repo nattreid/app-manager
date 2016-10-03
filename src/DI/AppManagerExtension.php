@@ -21,8 +21,8 @@ class AppManagerExtension extends \Nette\DI\CompilerExtension
 
 	private $defaults = [
 		'deploy' => [
-			'projectUrl' => NULL,
-			'ip' => NULL
+			'projectUrl' => null,
+			'ip' => null
 		],
 		'appDir' => '%appDir%',
 		'wwwDir' => '%wwwDir%',
