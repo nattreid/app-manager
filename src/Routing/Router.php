@@ -16,7 +16,7 @@ class Router extends \NAttreid\Routing\Router
 	{
 		$router = $this->getRouter();
 
-		$router[] = new Route('deploy/', 'AppManagerExt:Deploy:deploy');
+		$router[] = new Route('deploy/', 'AppManager:Deploy:deploy');
 	}
 
 }

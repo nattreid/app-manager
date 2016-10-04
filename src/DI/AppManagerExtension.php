@@ -79,7 +79,7 @@ class AppManagerExtension extends \Nette\DI\CompilerExtension
 
 		$builder->getDefinition('application.presenterFactory')
 			->addSetup('setMapping', [
-				['AppManagerExt' => 'NAttreid\AppManager\Control\*Presenter']
+				['AppManager' => 'NAttreid\AppManager\Control\*Presenter']
 			]);
 	}
 
