@@ -14,8 +14,6 @@ use Nextras\Dbal\Connection;
  * Sprava aplikace
  *
  * @author Attreid <attreid@gmail.com>
- *
- * @todo predelat repository cache
  */
 class AppManager
 {

@@ -35,7 +35,7 @@ class Gitlab extends Deploy
 			. 'git checkout -- vendor/others/;'
 			. 'git checkout -- www/.htaccess;'
 			. 'git checkout -- .gitignore;'
-			. 'git pull" 2>&1;'
+			. 'git pull 2>&1;'
 			. 'rm temp/cache/* -rf;'
 			. 'rm www/webtemp/* -rf;';
 		exec($command, $output);
