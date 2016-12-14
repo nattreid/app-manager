@@ -2,6 +2,7 @@
 
 namespace NAttreid\AppManager\Deploy;
 
+use InvalidArgumentException;
 use Nette\Http\Request;
 use Tracy\Debugger;
 
@@ -12,8 +13,6 @@ use Tracy\Debugger;
  */
 class Gitlab extends Deploy
 {
-
-	use \Nette\SmartObject;
 
 	/** @var string */
 	private $path;
@@ -29,25 +28,30 @@ class Gitlab extends Deploy
 	 */
 	public function update()
 	{
-		$command = 'cd ' . $this->path . ';'
-			. 'git checkout -- app/;'
-			. 'git checkout -- bin/;'
-			. 'git checkout -- vendor/others/;'
-			. 'git checkout -- www/.htaccess;'
-			. 'git checkout -- .gitignore;'
-			. 'git pull 2>&1;'
-			. 'rm temp/cache/* -rf;'
-			. 'rm www/webtemp/* -rf;';
-		exec($command, $output);
-		foreach ($output as $str) {
-			Debugger::log($str, 'gitlab');
+		$commands = [
+			"cd $this->path",
+			'echo $PWD',
+			'whoami',
+			'git pull',
+			'git status',
+			'git submodule sync',
+			'git submodule update',
+			'git submodule status',
+			'rm temp/cache/* -rf',
+			'rm www/webtemp/* -rf'
+		];
+		foreach ($commands AS $command) {
+			$output = shell_exec("$command 2>&1");
+			if ($output !== null) {
+				Debugger::log($output, 'gitlab');
+			}
 		}
 	}
 
 	/**
 	 * Akutalizuje z gitlabu, pokud je pristup z povolene adresy
 	 *
-	 * @throws \InvalidArgumentException
+	 * @throws InvalidArgumentException
 	 */
 	public function authorizedUpdate()
 	{

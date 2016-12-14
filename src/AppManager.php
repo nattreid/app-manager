@@ -10,6 +10,7 @@ use NAttreid\Utils\TempFile;
 use Nette\Utils\Finder;
 use Nextras\Dbal\Connection;
 use Nextras\Dbal\Utils\FileImporter;
+use WebLoader\Nette\LoaderFactory;
 
 /**
  * Sprava aplikace
@@ -18,8 +19,6 @@ use Nextras\Dbal\Utils\FileImporter;
  */
 class AppManager
 {
-
-	use \Nette\SmartObject;
 
 	/** @var string */
 	private $appDir, $wwwDir, $tempDir, $logDir, $sessionDir, $sessionExpiration;
@@ -39,7 +38,7 @@ class AppManager
 	/** @var callable[] */
 	public $onInvalidateCache = [];
 
-	public function __construct($appDir, $wwwDir, $tempDir, $logDir, $sessionDir, $sessionExpiration, Gitlab $gitlab, Composer $composer, Connection $db, \WebLoader\Nette\LoaderFactory $loader = null)
+	public function __construct($appDir, $wwwDir, $tempDir, $logDir, $sessionDir, $sessionExpiration, Gitlab $gitlab, Composer $composer, Connection $db, LoaderFactory $loader = null)
 	{
 		$this->appDir = $appDir;
 		$this->wwwDir = $wwwDir;

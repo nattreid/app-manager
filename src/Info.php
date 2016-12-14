@@ -2,39 +2,34 @@
 
 namespace NAttreid\AppManager;
 
+use Nette\SmartObject;
 use Nette\Utils\Strings;
+use stdClass as Obj;
 
 /**
  * Informace o serveru
+ *
+ * @property-read string $phpInfo Vrati vypis PHP info
+ * @property-read string $ip Vrati IP adresu serveru
+ * @property-read string $load Vrati vytizeni serveru
+ * @property-read Obj $system Vrati informace o systemu
+ * @property-read Obj $hardware Vrati informace o hardware
+ * @property-read Obj $memory Vrati informace o pameti
+ * @property-read Obj[] $fileSystem Vrati informace o souborovem system
+ * @property-read Obj[]|null $network Vrati informace o siti
+ *
  *
  * @author Attreid <attreid@gmail.com>
  */
 class Info
 {
-
-	use \Nette\SmartObject;
-
-	/**
-	 * Informace o serveru
-	 * @return \stdClass
-	 */
-	public function getServerInfo()
-	{
-		$server = new \stdClass;
-
-		$server->system = $this->getSystemInfo();
-		$server->hardware = $this->getHardwareInfo();
-		$server->memory = $this->getMemoryInfo();
-		$server->fileSystem = $this->getFileSystemInfo();
-		$server->network = $this->getNetworkInfo();
-		return $server;
-	}
+	use SmartObject;
 
 	/**
 	 * Vrati vypis PHP info
 	 * @return array
 	 */
-	public function getPhpInfo()
+	protected function getPhpInfo()
 	{
 		ob_start();
 		phpinfo();
@@ -85,11 +80,11 @@ class Info
 
 	/**
 	 * Vrati informace o systemu
-	 * @return \stdClass
+	 * @return Obj
 	 */
-	private function getSystemInfo()
+	protected function getSystem()
 	{
-		$system = new \stdClass;
+		$system = new Obj;
 
 		$system->hostname = $this->readFile('/etc/hostname');
 		$system->ip = $this->getIp();
@@ -98,7 +93,7 @@ class Info
 
 		$uptime = $this->readFile('/proc/uptime', ' ');
 		if ($uptime) {
-			$system->uptime = new \stdClass;
+			$system->uptime = new Obj;
 			$system->uptime->days = (int)gmdate("d", $uptime[0]) - 1;
 			$system->uptime->hours = (int)gmdate("H", $uptime[0]);
 			$system->uptime->minutes = (int)gmdate("i", $uptime[0]);
@@ -106,7 +101,7 @@ class Info
 
 		$users = $this->readCommand('users', ' ');
 		if ($users) {
-			$system->users = new \stdClass;
+			$system->users = new Obj;
 			$system->users->list = $users;
 			$system->users->count = count($system->users->list);
 		}
@@ -116,7 +111,7 @@ class Info
 			$system->load = $load;
 		}
 
-		$system->processes = new \stdClass;
+		$system->processes = new Obj;
 		$system->processes->total = $this->readCommand('ps axo state | wc -l');
 		$system->processes->running = $this->readCommand('ps axo state | grep "R" | wc -l');
 		$system->processes->sleeping = $system->processes->total - $system->processes->running;
@@ -128,7 +123,7 @@ class Info
 	 * Vrati IP adresu serveru
 	 * @return string
 	 */
-	public function getIp()
+	protected function getIp()
 	{
 		return filter_input(INPUT_SERVER, 'SERVER_ADDR');
 	}
@@ -137,7 +132,7 @@ class Info
 	 * Vrati vytizeni serveru
 	 * @return string
 	 */
-	public function getLoad()
+	protected function getLoad()
 	{
 		$load = $this->readFile('/proc/loadavg', ' ');
 		if ($load) {
@@ -149,11 +144,11 @@ class Info
 
 	/**
 	 * Vrati informace o hardware
-	 * @return \stdClass
+	 * @return Obj
 	 */
-	private function getHardwareInfo()
+	protected function getHardware()
 	{
-		$hardware = new \stdClass;
+		$hardware = new Obj;
 
 		$product = $this->readFile('/sys/devices/virtual/dmi/id/product_name');
 		$board = $this->readFile('/sys/devices/virtual/dmi/id/board_name');
@@ -168,20 +163,20 @@ class Info
 			$hardware->server = $server;
 		}
 
-		if (!empty($cpu = $this->getCpuInfo())) {
+		if (!empty($cpu = $this->getCpu())) {
 			$hardware->cpu = $cpu;
 		}
 
-		$hardware->scsi = $this->getScsiInfo();
+		$hardware->scsi = $this->getScsi();
 
 		return $hardware;
 	}
 
 	/**
 	 * Vrati informace o cpu
-	 * @return array
+	 * @return Obj[]
 	 */
-	private function getCpuInfo()
+	private function getCpu()
 	{
 		$result = [];
 		$cpuInfo = $this->readFile('/proc/cpuinfo');
@@ -192,7 +187,7 @@ class Info
 		$processors = preg_split('/\s?\n\s?\n/', trim($cpuInfo));
 		$procname = null;
 		foreach ($processors as $processor) {
-			$cpu = new \stdClass;
+			$cpu = new Obj;
 			$proc = null;
 			$arch = null;
 			$details = preg_split("/\n/", $processor, -1, PREG_SPLIT_NO_EMPTY);
@@ -326,9 +321,9 @@ class Info
 
 	/**
 	 * Vrati informace o scsi
-	 * @return array
+	 * @return Obj[]
 	 */
-	private function getScsiInfo()
+	private function getScsi()
 	{
 		$get_type = false;
 		$device = null;
@@ -343,7 +338,7 @@ class Info
 			}
 			if ($get_type) {
 				preg_match('/Type:\s+(\S+)/i', $buf, $dev_type);
-				$dev = new \stdClass;
+				$dev = new Obj;
 				$dev->name = trim($device[1]) . ' ' . trim($device[2]);
 				$dev->type = trim($dev_type[1]);
 				$scsi[] = $dev;
@@ -355,11 +350,11 @@ class Info
 
 	/**
 	 * Vrati informace o pameti
-	 * @return \stdClass
+	 * @return Obj
 	 */
-	private function getMemoryInfo()
+	protected function getMemory()
 	{
-		$memory = new \stdClass;
+		$memory = new Obj;
 		$bufer = preg_split("/\n/", $this->readFile('/proc/meminfo'), -1, PREG_SPLIT_NO_EMPTY);
 
 		if (empty($bufer)) {
@@ -388,7 +383,7 @@ class Info
 		unset($swaps[0]);
 		foreach ($swaps as $swap) {
 			$ar_buf = preg_split('/\s+/', $swap, PREG_BAD_UTF8_OFFSET_ERROR);
-			$swap = new \stdClass;
+			$swap = new Obj;
 			$swap->mount = $ar_buf[0];
 			$swap->name = 'SWAP';
 			$swap->total = $ar_buf[2] * 1024;
@@ -401,9 +396,9 @@ class Info
 
 	/**
 	 * Vrati informace o souborovem system
-	 * @return array
+	 * @return Obj[]
 	 */
-	private function getFileSystemInfo()
+	protected function getFileSystem()
 	{
 		$fileSystem = [];
 
@@ -411,7 +406,7 @@ class Info
 		unset($bufe[0]);
 		foreach ($bufe as $buf) {
 			$data = preg_split('/\s+/', $buf);
-			$mounted = new \stdClass;
+			$mounted = new Obj;
 
 			$mounted->partition = $data[0];
 			$mounted->type = $data[1];
@@ -429,9 +424,9 @@ class Info
 
 	/**
 	 * Vrati informace o siti
-	 * @return \stdClass[]|null
+	 * @return Obj[]|null
 	 */
-	private function getNetworkInfo()
+	protected function getNetwork()
 	{
 		$network = [];
 
@@ -441,7 +436,7 @@ class Info
 			list($dev_name, $stats_list) = preg_split('/:/', $buf, 2);
 			$stats = preg_split('/\s+/', trim($stats_list));
 
-			$dev = new \stdClass;
+			$dev = new Obj;
 			$dev->name = trim($dev_name);
 			$dev->recieve = $stats[0];
 			$dev->sent = $stats[8];

@@ -2,7 +2,9 @@
 
 namespace NAttreid\AppManager\Deploy;
 
+use InvalidArgumentException;
 use Nette\Http\Request;
+use Nette\Utils\Json;
 use Tracy\Debugger;
 
 /**
@@ -29,17 +31,17 @@ abstract class Deploy
 	/**
 	 * Je povolen pristup
 	 * @return boolean
-	 * @throws \InvalidArgumentException
+	 * @throws InvalidArgumentException
 	 */
 	protected function checkAccess()
 	{
 		if ($this->url === null || $this->ip === null) {
-			throw new \InvalidArgumentException('Deploy is not set');
+			throw new InvalidArgumentException('Deploy is not set');
 		}
 		$remoteAddress = $this->request->getRemoteAddress();
 		if ($remoteAddress == $this->ip) {
 			$json = file_get_contents('php://input');
-			$data = \Nette\Utils\Json::decode($json);
+			$data = Json::decode($json);
 
 			if ($data) {
 				if (isset($data->repository->url)) {

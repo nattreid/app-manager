@@ -9,6 +9,8 @@ use NAttreid\AppManager\Info;
 use NAttreid\AppManager\Logs;
 use NAttreid\AppManager\Routing\Router;
 use NAttreid\Routing\RouterFactory;
+use Nette\DI\CompilerExtension;
+use Nette\DI\Helpers;
 use Nette\DI\MissingServiceException;
 
 /**
@@ -16,7 +18,7 @@ use Nette\DI\MissingServiceException;
  *
  * @author Attreid <attreid@gmail.com>
  */
-class AppManagerExtension extends \Nette\DI\CompilerExtension
+class AppManagerExtension extends CompilerExtension
 {
 
 	private $defaults = [
@@ -37,11 +39,11 @@ class AppManagerExtension extends \Nette\DI\CompilerExtension
 		$builder = $this->getContainerBuilder();
 		$config = $this->validateConfig($this->defaults, $this->getConfig());
 
-		$config['appDir'] = \Nette\DI\Helpers::expand($config['appDir'], $builder->parameters);
-		$config['wwwDir'] = \Nette\DI\Helpers::expand($config['wwwDir'], $builder->parameters);
-		$config['tempDir'] = \Nette\DI\Helpers::expand($config['tempDir'], $builder->parameters);
-		$config['logDir'] = \Nette\DI\Helpers::expand($config['logDir'], $builder->parameters);
-		$config['sessionDir'] = \Nette\DI\Helpers::expand($config['sessionDir'], $builder->parameters);
+		$config['appDir'] = Helpers::expand($config['appDir'], $builder->parameters);
+		$config['wwwDir'] = Helpers::expand($config['wwwDir'], $builder->parameters);
+		$config['tempDir'] = Helpers::expand($config['tempDir'], $builder->parameters);
+		$config['logDir'] = Helpers::expand($config['logDir'], $builder->parameters);
+		$config['sessionDir'] = Helpers::expand($config['sessionDir'], $builder->parameters);
 
 		$deploy = $config['deploy'];
 		$builder->addDefinition($this->prefix('composer'))

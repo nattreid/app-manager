@@ -3,13 +3,14 @@
 namespace NAttreid\AppManager\Control;
 
 use NAttreid\AppManager\AppManager;
+use Nette\Application\UI\Presenter;
 
 /**
  * Deploy presenter
  *
  * @author Attreid <attreid@gmail.com>
  */
-class DeployPresenter extends \Nette\Application\UI\Presenter
+class DeployPresenter extends Presenter
 {
 
 	/** @var AppManager */

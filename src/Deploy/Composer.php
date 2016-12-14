@@ -2,6 +2,7 @@
 
 namespace NAttreid\AppManager\Deploy;
 
+use InvalidArgumentException;
 use Nette\Http\Request;
 use Tracy\Debugger;
 
@@ -12,8 +13,6 @@ use Tracy\Debugger;
  */
 class Composer extends Deploy
 {
-
-	use \Nette\SmartObject;
 
 	/** @var string */
 	private $composerDir = '/composer';
@@ -88,7 +87,7 @@ class Composer extends Deploy
 	/**
 	 * Akutalizuje composer, pokud je pristup z povolene adresy
 	 *
-	 * @throws \InvalidArgumentException
+	 * @throws InvalidArgumentException
 	 */
 	public function authorizedUpdate()
 	{

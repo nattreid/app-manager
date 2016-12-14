@@ -6,21 +6,23 @@ use NAttreid\Utils\Date;
 use NAttreid\Utils\File;
 use NAttreid\Utils\Hasher;
 use NAttreid\Utils\Number;
+use NAttreid\Utils\Strings;
 use NAttreid\Utils\TempFile;
 use Nette\Application\Responses\FileResponse;
 use Nette\IOException;
-use Nette\Utils\Strings;
+use Nette\SmartObject;
 
 /**
  * Sluzba logu
  *
  * @property-read array $logs
+ *
  * @author Attreid <attreid@gmail.com>
  */
 class Logs
 {
 
-	use \Nette\SmartObject;
+	use SmartObject;
 
 	/** @var string */
 	private $path;
@@ -33,7 +35,7 @@ class Logs
 
 	public function __construct($path, Hasher $hasher)
 	{
-		if (!\Nette\Utils\Strings::endsWith($path, DIRECTORY_SEPARATOR)) {
+		if (!Strings::endsWith($path, DIRECTORY_SEPARATOR)) {
 			$path .= DIRECTORY_SEPARATOR;
 		}
 		$this->path = $path;
