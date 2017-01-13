@@ -12,12 +12,9 @@ appManager:
     deploy:
         projectUrl: 'gitAdresaProjektu'
         ip: 'ipGitlabu'
-        appDir: %appDir%
-        wwwDir: %wwwDir%
-        tempDir: %tempDir%
-        logDir: %logDir%
-        sessionDir: %sessionDir%
-        sessionExpiration: '14 days'
+    sessionExpiration: '14 days'
+    backupDir:
+        - %wwwDir%/zalohovanyAdresar
 ```
 
 použití
