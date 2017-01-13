@@ -3,28 +3,30 @@
 namespace NAttreid\AppManager;
 
 use InvalidArgumentException;
-use NAttreid\AppManager\Deploy\Composer;
-use NAttreid\AppManager\Deploy\Gitlab;
-use NAttreid\Utils\File;
+use NAttreid\AppManager\Helpers\Backup;
+use NAttreid\AppManager\Helpers\Database;
+use NAttreid\AppManager\Helpers\Deploy\Composer;
+use NAttreid\AppManager\Helpers\Deploy\Gitlab;
+use NAttreid\AppManager\Helpers\Files;
+use NAttreid\AppManager\Helpers\Info;
+use NAttreid\AppManager\Helpers\Logs;
 use NAttreid\Utils\TempFile;
-use Nette\Utils\Finder;
-use Nextras\Dbal\Connection;
-use Nextras\Dbal\Utils\FileImporter;
-use WebLoader\Nette\LoaderFactory;
+use Nette\SmartObject;
 
 /**
  * Sprava aplikace
+ *
+ * @property-read Logs $logs
+ * @property-read Info $info
  *
  * @author Attreid <attreid@gmail.com>
  */
 class AppManager
 {
+	use SmartObject;
 
-	/** @var string */
-	private $appDir, $wwwDir, $tempDir, $logDir, $sessionDir, $sessionExpiration;
-
-	/** @var array */
-	private $webLoaderDir;
+	/** @var callable[] */
+	public $onInvalidateCache = [];
 
 	/** @var Gitlab */
 	private $gitlab;
@@ -32,104 +34,34 @@ class AppManager
 	/** @var Composer */
 	private $composer;
 
-	/** @var Connection */
+	/** @var Database */
 	private $db;
 
-	/** @var callable[] */
-	public $onInvalidateCache = [];
+	/** @var Files */
+	private $files;
 
-	public function __construct($appDir, $wwwDir, $tempDir, $logDir, $sessionDir, $sessionExpiration, Gitlab $gitlab, Composer $composer, Connection $db, LoaderFactory $loader = null)
+	/** @var string */
+	private $tempDir;
+
+	/** @var Backup */
+	private $backup;
+
+	/** @var Logs */
+	private $logs;
+
+	/** @var Info */
+	private $info;
+
+	public function __construct($tempDir, Gitlab $gitlab, Composer $composer, Database $db, Files $files, Backup $backup, Logs $logs, Info $info)
 	{
-		$this->appDir = $appDir;
-		$this->wwwDir = $wwwDir;
 		$this->tempDir = $tempDir;
-		$this->logDir = $logDir;
-		$this->sessionDir = $sessionDir;
-
-		if ($loader !== null) {
-			foreach ($loader->getTempPaths() as $path) {
-				$this->webLoaderDir[] = $wwwDir . '/' . $path;
-			}
-		}
-		$this->sessionExpiration = $sessionExpiration;
-
 		$this->gitlab = $gitlab;
 		$this->composer = $composer;
-
 		$this->db = $db;
-	}
-
-	/**
-	 * Smazani cache
-	 */
-	public function clearCache()
-	{
-		File::removeDir($this->tempDir . '/cache', false);
-		foreach ($this->webLoaderDir as $dir) {
-			if (file_exists($dir)) {
-				foreach (Finder::findFiles('*')
-							 ->exclude('.htaccess', 'web.config')
-							 ->in($dir) as $file) {
-					unlink($file);
-				}
-			}
-		}
-	}
-
-	/**
-	 * Smazani expirovane session (default je nastaven na maximalni dobu expirace session)
-	 * @param string $expiration format 1 minutes, 14 days atd
-	 */
-	public function clearSession($expiration = null)
-	{
-		if ($expiration === null) {
-			$expiration = $this->sessionExpiration;
-		}
-		foreach (Finder::findFiles('*')->date('<', '- ' . $expiration)
-					 ->exclude('.htaccess', 'web.config')
-					 ->in($this->sessionDir) as $file) {
-			unlink($file);
-		}
-	}
-
-	/**
-	 * Smaze temp
-	 */
-	public function clearTemp()
-	{
-		foreach (Finder::findFiles('*')
-					 ->exclude('.htaccess', 'web.config')
-					 ->in($this->tempDir) as $file) {
-			unlink($file);
-		}
-		foreach (Finder::findDirectories('*')
-					 ->in($this->tempDir) as $dirname) {
-
-			foreach (Finder::findFiles('*')
-						 ->exclude('.htaccess', 'web.config')
-						 ->in($dirname) as $file) {
-				unlink($file);
-			}
-			foreach (Finder::findDirectories('*')
-						 ->in($dirname) as $dir) {
-				File::removeDir($dir);
-			}
-			if (File::isDirEmpty($dirname)) {
-				File::removeDir($dirname);
-			}
-		}
-	}
-
-	/**
-	 * Smazani logu
-	 */
-	public function clearLog()
-	{
-		foreach (Finder::findFiles('*')
-					 ->exclude('.htaccess', 'web.config')
-					 ->in($this->logDir) as $file) {
-			unlink($file);
-		}
+		$this->files = $files;
+		$this->backup = $backup;
+		$this->logs = $logs;
+		$this->info = $info;
 	}
 
 	/**
@@ -143,19 +75,44 @@ class AppManager
 	}
 
 	/**
+	 * Smazani cache
+	 */
+	public function clearCache()
+	{
+		$this->files->clearCache();
+	}
+
+	/**
+	 * Smazani expirovane session (default je nastaven na maximalni dobu expirace session)
+	 * @param string $expiration format 1 minutes, 14 days atd
+	 */
+	public function clearSession($expiration = null)
+	{
+		$this->files->clearSession($expiration);
+	}
+
+	/**
+	 * Smaze temp
+	 */
+	public function clearTemp()
+	{
+		$this->files->clearTemp();
+	}
+
+	/**
+	 * Smazani logu
+	 */
+	public function clearLog()
+	{
+		$this->files->clearLog();
+	}
+
+	/**
 	 * Smaze CSS cache
 	 */
 	public function clearCss()
 	{
-		foreach ($this->webLoaderDir as $dir) {
-			if (file_exists($dir)) {
-				foreach (Finder::findFiles('*.css')
-							 ->exclude('.htaccess', 'web.config')
-							 ->in($dir) as $file) {
-					unlink($file);
-				}
-			}
-		}
+		$this->files->clearCss();
 	}
 
 	/**
@@ -163,15 +120,7 @@ class AppManager
 	 */
 	public function clearJs()
 	{
-		foreach ($this->webLoaderDir as $dir) {
-			if (file_exists($dir)) {
-				foreach (Finder::findFiles('*.js')
-							 ->exclude('.htaccess', 'web.config')
-							 ->in($dir) as $file) {
-					unlink($file);
-				}
-			}
-		}
+		$this->files->clearJs();
 	}
 
 	/**
@@ -228,55 +177,7 @@ class AppManager
 	 */
 	public function backupDatabase()
 	{
-		$backup = new TempFile('backup.sql', true);
-		$tables = $this->db->getPlatform()->getTables();
-
-		$backup->write("SET NAMES utf8;\n");
-		$backup->write("SET time_zone = '+00:00';\n");
-		$backup->write("SET foreign_key_checks = 0;\n");
-		$backup->write("SET sql_mode = 'NO_AUTO_VALUE_ON_ZERO';\n\n\n");
-
-		foreach ($tables as $table) {
-			$tableName = $table['name'];
-			$backup->write("DROP TABLE IF EXISTS `$tableName`;\n");
-
-			$createTable = $this->db->query("SHOW CREATE TABLE %table", $tableName)->fetch()->{'Create Table'};
-			$backup->write("$createTable;\n\n");
-
-			$rows = $this->db->query("SELECT * FROM %table", $tableName);
-			$insert = [];
-			$columns = null;
-			foreach ($rows as $row) {
-				$field = $row->toArray();
-
-				if ($columns === null) {
-					$colName = [];
-					foreach ($field as $key => $value) {
-						$colName[] = "`$key`";
-					}
-					$columns = implode(', ', $colName);
-				}
-				$cols = [];
-				foreach ($field as $column) {
-					$column = addslashes($column);
-					$column = preg_replace("/\n/", "\\n", $column);
-					$cols[] = '"' . $column . '"';
-				}
-				$insert[] = implode(', ', $cols);
-			}
-
-			if (!empty($insert)) {
-				$backup->write("INSERT INTO `$tableName` ($columns) VALUES\n(" . implode("),\n(", $insert) . ");\n");
-			}
-
-			$backup->write("\n\n");
-		}
-
-		// zip
-		$archive = new TempFile;
-		File::zip($backup, $archive);
-
-		return $archive;
+		return $this->db->backupDatabase();
 	}
 
 	/**
@@ -284,14 +185,7 @@ class AppManager
 	 */
 	public function dropDatabase()
 	{
-		$tables = $this->db->getPlatform()->getTables();
-		if (!empty($tables)) {
-			$this->db->query('SET foreign_key_checks = 0');
-			foreach ($tables as $table) {
-				$this->db->query('DROP TABLE %table', $table['name']);
-			}
-			$this->db->query('SET foreign_key_checks = 1');
-		}
+		$this->db->dropDatabase();
 	}
 
 	/**
@@ -300,11 +194,32 @@ class AppManager
 	 */
 	public function loadDatabase($file)
 	{
-		$this->db->transactional(function (Connection $db) use ($file) {
-			$db->query('SET foreign_key_checks = 0');
-			FileImporter::executeFile($db, $file);
-			$db->query('SET foreign_key_checks = 1');
-		});
+		$this->db->loadDatabase($file);
+	}
+
+	/**
+	 * Vrati zalohu
+	 * @return TempFile
+	 */
+	public function backup()
+	{
+		return $this->backup->backup();
+	}
+
+	/**
+	 * @return Logs
+	 */
+	protected function getLogs()
+	{
+		return $this->logs;
+	}
+
+	/**
+	 * @return Info
+	 */
+	protected function getInfo()
+	{
+		return $this->info;
 	}
 
 }

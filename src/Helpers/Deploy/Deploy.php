@@ -1,6 +1,6 @@
 <?php
 
-namespace NAttreid\AppManager\Deploy;
+namespace NAttreid\AppManager\Helpers\Deploy;
 
 use InvalidArgumentException;
 use Nette\Http\Request;

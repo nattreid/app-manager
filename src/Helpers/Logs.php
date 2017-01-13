@@ -1,6 +1,6 @@
 <?php
 
-namespace NAttreid\AppManager;
+namespace NAttreid\AppManager\Helpers;
 
 use NAttreid\Utils\Date;
 use NAttreid\Utils\File;

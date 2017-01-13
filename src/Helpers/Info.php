@@ -1,6 +1,6 @@
 <?php
 
-namespace NAttreid\AppManager;
+namespace NAttreid\AppManager\Helpers;
 
 use Nette\SmartObject;
 use Nette\Utils\Strings;

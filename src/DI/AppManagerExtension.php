@@ -3,10 +3,12 @@
 namespace NAttreid\AppManager\DI;
 
 use NAttreid\AppManager\AppManager;
-use NAttreid\AppManager\Deploy\Composer;
-use NAttreid\AppManager\Deploy\Gitlab;
-use NAttreid\AppManager\Info;
-use NAttreid\AppManager\Logs;
+use NAttreid\AppManager\Helpers\Backup;
+use NAttreid\AppManager\Helpers\Database;
+use NAttreid\AppManager\Helpers\Deploy\Composer;
+use NAttreid\AppManager\Helpers\Deploy\Gitlab;
+use NAttreid\AppManager\Helpers\Info;
+use NAttreid\AppManager\Helpers\Logs;
 use NAttreid\AppManager\Routing\Router;
 use NAttreid\Routing\RouterFactory;
 use Nette\DI\CompilerExtension;
@@ -26,6 +28,7 @@ class AppManagerExtension extends CompilerExtension
 			'projectUrl' => null,
 			'ip' => null
 		],
+		'backupDir' => [],
 		'appDir' => '%appDir%',
 		'wwwDir' => '%wwwDir%',
 		'tempDir' => '%tempDir%',
@@ -44,6 +47,9 @@ class AppManagerExtension extends CompilerExtension
 		$config['tempDir'] = Helpers::expand($config['tempDir'], $builder->parameters);
 		$config['logDir'] = Helpers::expand($config['logDir'], $builder->parameters);
 		$config['sessionDir'] = Helpers::expand($config['sessionDir'], $builder->parameters);
+		foreach ($config['backupDir'] as $key => $dir) {
+			$config['backupDir'][$key] = Helpers::expand($dir, $builder->parameters);
+		}
 
 		$deploy = $config['deploy'];
 		$builder->addDefinition($this->prefix('composer'))
@@ -55,14 +61,25 @@ class AppManagerExtension extends CompilerExtension
 
 		$builder->addDefinition($this->prefix('appManager'))
 			->setClass(AppManager::class)
+			->setArguments([$config['tempDir']]);
+
+		$builder->addDefinition($this->prefix('files'))
+			->setClass(AppManager::class)
 			->setArguments([$config['appDir'], $config['wwwDir'], $config['tempDir'], $config['logDir'], $config['sessionDir'], $config['sessionExpiration']]);
 
 		$builder->addDefinition($this->prefix('info'))
 			->setClass(Info::class);
 
+		$builder->addDefinition($this->prefix('database'))
+			->setClass(Database::class);
+
 		$builder->addDefinition($this->prefix('logs'))
 			->setClass(Logs::class)
 			->setArguments([$config['logDir']]);
+
+		$builder->addDefinition($this->prefix('backup'))
+			->setClass(Backup::class)
+			->setArguments([$config['backupDir']]);
 
 		$builder->addDefinition($this->prefix('router'))
 			->setClass(Router::class);
