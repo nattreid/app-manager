@@ -25,14 +25,13 @@ class Database
 		$this->connection = $connection;
 	}
 
-
 	/**
 	 * Vrati zalohu databaze
 	 * @return TempFile
 	 */
 	public function backupDatabase()
 	{
-		$backup = new TempFile('backup.sql', true);
+		$backup = new TempFile('database.sql', true);
 		$tables = $this->connection->getPlatform()->getTables();
 
 		$backup->write("SET NAMES utf8;\n");
@@ -76,9 +75,17 @@ class Database
 			$backup->write("\n\n");
 		}
 
-		// zip
-		$archive = new TempFile;
-		File::zip($backup, $archive);
+		return $backup;
+	}
+
+	/**
+	 * Vrati zabalenou zalohu databaze
+	 * @return TempFile
+	 */
+	public function compressBackupDatabase()
+	{
+		$archive = new TempFile('databaze.zip');
+		File::zip($this->backupDatabase(), $archive);
 
 		return $archive;
 	}

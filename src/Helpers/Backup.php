@@ -38,7 +38,6 @@ class Backup
 			$backup[] = $dir;
 		}
 
-		// zip
 		$archive = new TempFile;
 		File::zip($backup, $archive);
 

@@ -7,6 +7,7 @@ use NAttreid\AppManager\Helpers\Backup;
 use NAttreid\AppManager\Helpers\Database;
 use NAttreid\AppManager\Helpers\Deploy\Composer;
 use NAttreid\AppManager\Helpers\Deploy\Gitlab;
+use NAttreid\AppManager\Helpers\Files;
 use NAttreid\AppManager\Helpers\Info;
 use NAttreid\AppManager\Helpers\Logs;
 use NAttreid\AppManager\Routing\Router;
@@ -64,7 +65,7 @@ class AppManagerExtension extends CompilerExtension
 			->setArguments([$config['tempDir']]);
 
 		$builder->addDefinition($this->prefix('files'))
-			->setClass(AppManager::class)
+			->setClass(Files::class)
 			->setArguments([$config['appDir'], $config['wwwDir'], $config['tempDir'], $config['logDir'], $config['sessionDir'], $config['sessionExpiration']]);
 
 		$builder->addDefinition($this->prefix('info'))

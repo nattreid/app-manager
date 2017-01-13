@@ -177,7 +177,7 @@ class AppManager
 	 */
 	public function backupDatabase()
 	{
-		return $this->db->backupDatabase();
+		return $this->db->compressBackupDatabase();
 	}
 
 	/**
