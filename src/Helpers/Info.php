@@ -67,7 +67,7 @@ class Info
 	 */
 	private function readCommand($command, $explode = null)
 	{
-		exec($command, $result);
+		@exec($command, $result);
 		if (!empty($result)) {
 			$result = implode("\n", $result);
 			if ($explode !== null) {
