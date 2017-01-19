@@ -69,8 +69,8 @@ class AppManager
 	 */
 	public function invalidateCache()
 	{
-		foreach ($this->onInvalidateCache as $func) {
-			$func();
+		foreach ($this->onInvalidateCache as $callback) {
+			$callback();
 		}
 	}
 
