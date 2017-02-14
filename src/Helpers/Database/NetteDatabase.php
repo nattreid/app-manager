@@ -32,6 +32,7 @@ class NetteDatabase implements IDriver
 		foreach ($tables as $table) {
 			yield $table['name'];
 		}
+		return [];
 	}
 
 	/**
@@ -55,6 +56,7 @@ class NetteDatabase implements IDriver
 		foreach ($rows as $row) {
 			yield $row->toArray();
 		}
+		return [];
 	}
 
 	/**

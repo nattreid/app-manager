@@ -4,7 +4,7 @@ namespace NAttreid\AppManager;
 
 use InvalidArgumentException;
 use NAttreid\AppManager\Helpers\Backup;
-use NAttreid\AppManager\Helpers\Database;
+use NAttreid\AppManager\Helpers\Database\SQL;
 use NAttreid\AppManager\Helpers\Deploy\Composer;
 use NAttreid\AppManager\Helpers\Deploy\Gitlab;
 use NAttreid\AppManager\Helpers\Files;
@@ -34,7 +34,7 @@ class AppManager
 	/** @var Composer */
 	private $composer;
 
-	/** @var Database */
+	/** @var SQL */
 	private $db;
 
 	/** @var Files */
@@ -52,7 +52,7 @@ class AppManager
 	/** @var Info */
 	private $info;
 
-	public function __construct($tempDir, Gitlab $gitlab, Composer $composer, Database $db, Files $files, Backup $backup, Logs $logs, Info $info)
+	public function __construct($tempDir, Gitlab $gitlab, Composer $composer, SQL $db, Files $files, Backup $backup, Logs $logs, Info $info)
 	{
 		$this->tempDir = $tempDir;
 		$this->gitlab = $gitlab;

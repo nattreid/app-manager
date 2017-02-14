@@ -4,7 +4,7 @@ namespace NAttreid\AppManager\DI;
 
 use NAttreid\AppManager\AppManager;
 use NAttreid\AppManager\Helpers\Backup;
-use NAttreid\AppManager\Helpers\Database;
+use NAttreid\AppManager\Helpers\Database\SQL;
 use NAttreid\AppManager\Helpers\Deploy\Composer;
 use NAttreid\AppManager\Helpers\Deploy\Gitlab;
 use NAttreid\AppManager\Helpers\Files;
@@ -71,8 +71,8 @@ class AppManagerExtension extends CompilerExtension
 		$builder->addDefinition($this->prefix('info'))
 			->setClass(Info::class);
 
-		$builder->addDefinition($this->prefix('database'))
-			->setClass(Database::class);
+		$builder->addDefinition($this->prefix('sql'))
+			->setClass(SQL::class);
 
 		$builder->addDefinition($this->prefix('logs'))
 			->setClass(Logs::class)

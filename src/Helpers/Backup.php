@@ -2,6 +2,7 @@
 
 namespace NAttreid\AppManager\Helpers;
 
+use NAttreid\AppManager\Helpers\Database\SQL;
 use NAttreid\Utils\File;
 use NAttreid\Utils\TempFile;
 
@@ -15,13 +16,13 @@ class Backup
 	/** @var string[] */
 	private $dirs;
 
-	/** @var Database */
+	/** @var SQL */
 	private $database;
 
 	/**
 	 * Backup constructor.
 	 */
-	public function __construct(array $dirs, Database $database)
+	public function __construct(array $dirs, SQL $database)
 	{
 		$this->dirs = $dirs;
 		$this->database = $database;
