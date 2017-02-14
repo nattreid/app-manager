@@ -1,38 +1,60 @@
 <?php
 
-namespace NAttreid\AppManager\Helpers;
+namespace NAttreid\AppManager\Helpers\Database;
 
 use NAttreid\Utils\File;
 use NAttreid\Utils\TempFile;
-use Nextras\Dbal\Connection;
-use Nextras\Dbal\Utils\FileImporter;
+use Nette\Database\Context as Nette;
+use Nette\NotSupportedException;
+use Nextras\Dbal\Connection as Nextras;
 
 /**
- * Class Database
+ * Class SQL
  *
  * @author Attreid <attreid@gmail.com>
  */
-class Database
+class SQL
 {
-	/** @var Connection */
-	private $connection;
+	/** @var IDriver */
+	private $driver;
+
+	/** @var bool */
+	private $isSupported = true;
 
 	/**
 	 * Database constructor.
 	 */
-	public function __construct(Connection $connection)
+	public function __construct(Nextras $nextras = null, Nette $nette = null)
 	{
-		$this->connection = $connection;
+		if ($nextras !== null) {
+			$this->driver = new NextrasDbal($nextras);
+		} elseif ($nette !== null) {
+			$this->driver = new NetteDatabase($nette);
+		} else {
+			$this->isSupported = false;
+		}
+	}
+
+	/**
+	 * @throws NotSupportedException
+	 */
+	private function check()
+	{
+		if (!$this->isSupported) {
+			throw new NotSupportedException();
+		}
 	}
 
 	/**
 	 * Vrati zalohu databaze
 	 * @return TempFile
+	 * @throws NotSupportedException
 	 */
 	public function backupDatabase()
 	{
+		$this->check();
 		$backup = new TempFile('database.sql', true);
-		$tables = $this->connection->getPlatform()->getTables();
+		$tables = $this->driver->getTables();
 
 		$backup->write("SET NAMES utf8;\n");
 		$backup->write("SET time_zone = '+00:00';\n");
@@ -40,27 +62,25 @@ class Database
 		$backup->write("SET sql_mode = 'NO_AUTO_VALUE_ON_ZERO';\n\n\n");
 
 		foreach ($tables as $table) {
-			$tableName = $table['name'];
-			$backup->write("DROP TABLE IF EXISTS `$tableName`;\n");
+			$backup->write("DROP TABLE IF EXISTS `$table`;\n");
 
-			$createTable = $this->connection->query("SHOW CREATE TABLE %table", $tableName)->fetch()->{'Create Table'};
+			$createTable = $this->driver->getCreateTable($table);
 			$backup->write("$createTable;\n\n");
 
-			$rows = $this->connection->query("SELECT * FROM %table", $tableName);
+			$rows = $this->driver->getRows($table);
 			$insert = [];
 			$columns = null;
 			foreach ($rows as $row) {
-				$field = $row->toArray();
 
 				if ($columns === null) {
 					$colName = [];
-					foreach ($field as $key => $value) {
+					foreach ($row as $key => $value) {
 						$colName[] = "`$key`";
 					}
 					$columns = implode(', ', $colName);
 				}
 				$cols = [];
-				foreach ($field as $column) {
+				foreach ($row as $column) {
 					$column = addslashes($column);
 					$column = preg_replace("/\n/", "\\n", $column);
 					$cols[] = '"' . $column . '"';
@@ -69,7 +89,7 @@ class Database
 			}
 
 			if (!empty($insert)) {
-				$backup->write("INSERT INTO `$tableName` ($columns) VALUES\n(" . implode("),\n(", $insert) . ");\n");
+				$backup->write("INSERT INTO `$table` ($columns) VALUES\n(" . implode("),\n(", $insert) . ");\n");
 			}
 
 			$backup->write("\n\n");
@@ -81,9 +101,11 @@ class Database
 	/**
 	 * Vrati zabalenou zalohu databaze
 	 * @return TempFile
+	 * @throws NotSupportedException
 	 */
 	public function compressBackupDatabase()
 	{
+		$this->check();
 		$archive = new TempFile('databaze.zip');
 		File::zip($this->backupDatabase(), $archive);
 
@@ -92,29 +114,22 @@ class Database
 
 	/**
 	 * Smaze vsechny tabulky v databazi
+	 * @throws NotSupportedException
 	 */
 	public function dropDatabase()
 	{
-		$tables = $this->connection->getPlatform()->getTables();
-		if (!empty($tables)) {
-			$this->connection->query('SET foreign_key_checks = 0');
-			foreach ($tables as $table) {
-				$this->connection->query('DROP TABLE %table', $table['name']);
-			}
-			$this->connection->query('SET foreign_key_checks = 1');
-		}
+		$this->check();
+		$this->driver->dropDatabase();
 	}
 
 	/**
 	 * Nahraje databazi
 	 * @param string $file
+	 * @throws NotSupportedException
 	 */
 	public function loadDatabase($file)
 	{
-		$this->connection->transactional(function (Connection $db) use ($file) {
-			$db->query('SET foreign_key_checks = 0');
-			FileImporter::executeFile($db, $file);
-			$db->query('SET foreign_key_checks = 1');
-		});
+		$this->check();
+		$this->driver->loadDatabase($file);
 	}
 }
