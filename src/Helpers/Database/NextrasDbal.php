@@ -30,7 +30,7 @@ class NextrasDbal implements IDriver
 		foreach ($tables as $table) {
 			yield $table['name'];
 		}
-		return [];
+		yield [];
 	}
 
 	/**
@@ -53,7 +53,7 @@ class NextrasDbal implements IDriver
 		foreach ($rows as $row) {
 			yield $row->toArray();
 		}
-		return [];
+		yield [];
 	}
 
 	/**
