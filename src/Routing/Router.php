@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace NAttreid\AppManager\Routing;
 
 use Nette\Application\Routers\Route;

@@ -1,7 +1,10 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace NAttreid\AppManager\Helpers\Database;
 
+use Generator;
 use Nette\Database\Context;
 use Nette\Database\Helpers;
 use Nette\Database\Table\ActiveRow;
@@ -24,9 +27,9 @@ class NetteDatabase implements IDriver
 
 	/**
 	 * Vrati nazvy tabulek
-	 * @return string[]
+	 * @return string[]|Generator
 	 */
-	public function getTables()
+	public function getTables(): Generator
 	{
 		$tables = $this->context->getStructure()->getTables();;
 		foreach ($tables as $table) {
@@ -40,16 +43,16 @@ class NetteDatabase implements IDriver
 	 * @param string $table
 	 * @return string
 	 */
-	public function getCreateTable($table)
+	public function getCreateTable(string $table): string
 	{
 		return $this->context->query('SHOW CREATE TABLE ' . $table)->fetch()->{'Create Table'};
 	}
 
 	/**
 	 * @param string $table
-	 * @return string[][]
+	 * @return string[][]|Generator
 	 */
-	public function getRows($table)
+	public function getRows(string $table): Generator
 	{
 		$rows = $this->context->table($table);
 		/* @var $row ActiveRow */
@@ -78,7 +81,7 @@ class NetteDatabase implements IDriver
 	 * Nahraje databazi
 	 * @param string $file
 	 */
-	public function loadDatabase($file)
+	public function loadDatabase(string $file)
 	{
 		Helpers::loadFromFile($this->context->getConnection(), $file);
 	}

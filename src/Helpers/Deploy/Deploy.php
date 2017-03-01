@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace NAttreid\AppManager\Helpers\Deploy;
 
 use InvalidArgumentException;
@@ -21,7 +23,7 @@ abstract class Deploy
 	/** @var Request */
 	private $request;
 
-	public function __construct($url, $ip, Request $request)
+	public function __construct(string $url, string $ip, Request $request)
 	{
 		$this->url = $url;
 		$this->ip = $ip;
@@ -30,10 +32,10 @@ abstract class Deploy
 
 	/**
 	 * Je povolen pristup
-	 * @return boolean
+	 * @return bool
 	 * @throws InvalidArgumentException
 	 */
-	protected function checkAccess()
+	protected function checkAccess(): bool
 	{
 		if ($this->url === null || $this->ip === null) {
 			throw new InvalidArgumentException('Deploy is not set');

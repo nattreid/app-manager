@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace NAttreid\AppManager\Helpers;
 
 use NAttreid\Utils\File;
@@ -20,7 +22,7 @@ class Files
 	/** @var array */
 	private $webLoaderDir = [];
 
-	public function __construct($appDir, $wwwDir, $tempDir, $logDir, $sessionDir, $sessionExpiration, LoaderFactory $loader = null)
+	public function __construct(string $appDir, string $wwwDir,string $tempDir,string $logDir,string $sessionDir,string $sessionExpiration, LoaderFactory $loader = null)
 	{
 		$this->appDir = $appDir;
 		$this->wwwDir = $wwwDir;
@@ -36,6 +38,9 @@ class Files
 		}
 	}
 
+	/**
+	 * Smaze cache
+	 */
 	public function clearCache()
 	{
 		File::removeDir($this->tempDir . '/cache', false);
@@ -54,7 +59,7 @@ class Files
 	 * Smazani expirovane session (default je nastaven na maximalni dobu expirace session)
 	 * @param string $expiration format 1 minutes, 14 days atd
 	 */
-	public function clearSession($expiration = null)
+	public function clearSession(string $expiration = null)
 	{
 		if ($expiration === null) {
 			$expiration = $this->sessionExpiration;

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace NAttreid\AppManager\Helpers\Deploy;
 
 use InvalidArgumentException;
@@ -23,7 +25,7 @@ class Composer extends Deploy
 	/** @var string */
 	private $path, $tempDir;
 
-	public function __construct($appDir, $tempDir, $url, $ip, Request $request)
+	public function __construct(string $appDir, string $tempDir, string $url, string $ip, Request $request)
 	{
 		parent::__construct($url, $ip, $request);
 		$this->path = $appDir . '/..';
@@ -34,7 +36,7 @@ class Composer extends Deploy
 	 * Vrati composer
 	 * @return string
 	 */
-	private function getComposer()
+	private function getComposer(): string
 	{
 		$composer = $this->tempDir . $this->composer;
 

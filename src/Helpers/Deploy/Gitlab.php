@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace NAttreid\AppManager\Helpers\Deploy;
 
 use InvalidArgumentException;
@@ -17,7 +19,7 @@ class Gitlab extends Deploy
 	/** @var string */
 	private $path;
 
-	public function __construct($appDir, $url, $ip, Request $request)
+	public function __construct(string $appDir, string $url, string $ip, Request $request)
 	{
 		parent::__construct($url, $ip, $request);
 		$this->path = $appDir . '/..';

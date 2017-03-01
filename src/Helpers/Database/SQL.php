@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace NAttreid\AppManager\Helpers\Database;
 
 use NAttreid\Utils\File;
@@ -21,9 +23,6 @@ class SQL
 	/** @var bool */
 	private $isSupported = true;
 
-	/**
-	 * Database constructor.
-	 */
 	public function __construct(Nextras $nextras = null, Nette $nette = null)
 	{
 		if ($nextras !== null) {
@@ -50,7 +49,7 @@ class SQL
 	 * @return TempFile
 	 * @throws NotSupportedException
 	 */
-	public function backupDatabase()
+	public function backupDatabase(): TempFile
 	{
 		$this->check();
 		$backup = new TempFile('database.sql', true);
@@ -103,7 +102,7 @@ class SQL
 	 * @return TempFile
 	 * @throws NotSupportedException
 	 */
-	public function compressBackupDatabase()
+	public function compressBackupDatabase(): TempFile
 	{
 		$this->check();
 		$archive = new TempFile('databaze.zip');
@@ -127,7 +126,7 @@ class SQL
 	 * @param string $file
 	 * @throws NotSupportedException
 	 */
-	public function loadDatabase($file)
+	public function loadDatabase(string $file)
 	{
 		$this->check();
 		$this->driver->loadDatabase($file);

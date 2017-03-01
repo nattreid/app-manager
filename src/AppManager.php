@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace NAttreid\AppManager;
 
 use InvalidArgumentException;
@@ -52,7 +54,7 @@ class AppManager
 	/** @var Info */
 	private $info;
 
-	public function __construct($tempDir, Gitlab $gitlab, Composer $composer, SQL $db, Files $files, Backup $backup, Logs $logs, Info $info)
+	public function __construct(string $tempDir, Gitlab $gitlab, Composer $composer, SQL $db, Files $files, Backup $backup, Logs $logs, Info $info)
 	{
 		$this->tempDir = $tempDir;
 		$this->gitlab = $gitlab;
@@ -86,7 +88,7 @@ class AppManager
 	 * Smazani expirovane session (default je nastaven na maximalni dobu expirace session)
 	 * @param string $expiration format 1 minutes, 14 days atd
 	 */
-	public function clearSession($expiration = null)
+	public function clearSession(string $expiration = null)
 	{
 		$this->files->clearSession($expiration);
 	}
@@ -125,9 +127,9 @@ class AppManager
 
 	/**
 	 * Zapne nebo vypne udrzbu stranek (zobrazi se stranka udrzby)
-	 * @param boolean $set
+	 * @param bool $set
 	 */
-	public function maintenance($set = true)
+	public function maintenance(bool $set = true)
 	{
 		$file = $this->tempDir . '/maintenance';
 		if ($set) {
@@ -141,10 +143,10 @@ class AppManager
 
 	/**
 	 * Aktualizace zdrojovych kodu pomoci composeru
-	 * @param boolean $force
+	 * @param bool $force
 	 * @throws InvalidArgumentException
 	 */
-	public function composerUpdate($force = false)
+	public function composerUpdate(bool $force = false)
 	{
 		$this->maintenance();
 		if ($force) {
@@ -157,10 +159,10 @@ class AppManager
 
 	/**
 	 * Deploy
-	 * @param boolean $force
+	 * @param bool $force
 	 * @throws InvalidArgumentException
 	 */
-	public function gitPull($force = false)
+	public function gitPull(bool $force = false)
 	{
 		$this->maintenance();
 		if ($force) {
@@ -175,7 +177,7 @@ class AppManager
 	 * Vrati zalohu databaze
 	 * @return TempFile
 	 */
-	public function backupDatabase()
+	public function backupDatabase(): TempFile
 	{
 		return $this->db->compressBackupDatabase();
 	}
@@ -192,7 +194,7 @@ class AppManager
 	 * Nahraje databazi
 	 * @param string $file
 	 */
-	public function loadDatabase($file)
+	public function loadDatabase(string $file)
 	{
 		$this->db->loadDatabase($file);
 	}
@@ -201,7 +203,7 @@ class AppManager
 	 * Vrati zalohu
 	 * @return TempFile
 	 */
-	public function backup()
+	public function backup(): TempFile
 	{
 		return $this->backup->backup();
 	}
@@ -209,7 +211,7 @@ class AppManager
 	/**
 	 * @return Logs
 	 */
-	protected function getLogs()
+	protected function getLogs(): Logs
 	{
 		return $this->logs;
 	}
@@ -217,7 +219,7 @@ class AppManager
 	/**
 	 * @return Info
 	 */
-	protected function getInfo()
+	protected function getInfo(): Info
 	{
 		return $this->info;
 	}

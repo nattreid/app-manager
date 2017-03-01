@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace NAttreid\AppManager\Helpers;
 
 use Nette\SmartObject;
@@ -27,9 +29,9 @@ class Info
 
 	/**
 	 * Vrati vypis PHP info
-	 * @return array
+	 * @return string
 	 */
-	protected function getPhpInfo()
+	protected function getPhpInfo(): string
 	{
 		ob_start();
 		phpinfo();
@@ -45,9 +47,9 @@ class Info
 	 * Precteni souboru do retezce
 	 * @param string $file
 	 * @param string $explode
-	 * @return string
+	 * @return string[]|string
 	 */
-	private function readFile($file, $explode = null)
+	private function readFile(string $file, string $explode = null)
 	{
 		$result = @file_get_contents($file);
 		if (!empty($result)) {
@@ -65,7 +67,7 @@ class Info
 	 * @param string $explode
 	 * @return string|array
 	 */
-	private function readCommand($command, $explode = null)
+	private function readCommand(string $command, string $explode = null)
 	{
 		@exec($command, $result);
 		if (!empty($result)) {
@@ -82,7 +84,7 @@ class Info
 	 * Vrati informace o systemu
 	 * @return Obj
 	 */
-	protected function getSystem()
+	protected function getSystem(): Obj
 	{
 		$system = new Obj;
 
@@ -123,7 +125,7 @@ class Info
 	 * Vrati IP adresu serveru
 	 * @return string
 	 */
-	protected function getIp()
+	protected function getIp(): string
 	{
 		return filter_input(INPUT_SERVER, 'SERVER_ADDR');
 	}
@@ -132,21 +134,21 @@ class Info
 	 * Vrati vytizeni serveru
 	 * @return string
 	 */
-	protected function getLoad()
+	protected function getLoad(): string
 	{
 		$load = $this->readFile('/proc/loadavg', ' ');
 		if ($load) {
 			unset($load[3], $load[4]);
 			return implode(' ', $load);
 		}
-		return null;
+		return '';
 	}
 
 	/**
 	 * Vrati informace o hardware
 	 * @return Obj
 	 */
-	protected function getHardware()
+	protected function getHardware(): Obj
 	{
 		$hardware = new Obj;
 
@@ -176,7 +178,7 @@ class Info
 	 * Vrati informace o cpu
 	 * @return Obj[]
 	 */
-	private function getCpu()
+	private function getCpu(): array
 	{
 		$result = [];
 		$cpuInfo = $this->readFile('/proc/cpuinfo');
@@ -323,7 +325,7 @@ class Info
 	 * Vrati informace o scsi
 	 * @return Obj[]
 	 */
-	private function getScsi()
+	private function getScsi(): array
 	{
 		$get_type = false;
 		$device = null;
@@ -352,7 +354,7 @@ class Info
 	 * Vrati informace o pameti
 	 * @return Obj
 	 */
-	protected function getMemory()
+	protected function getMemory(): Obj
 	{
 		$memory = new Obj;
 		$bufer = preg_split("/\n/", $this->readFile('/proc/meminfo'), -1, PREG_SPLIT_NO_EMPTY);
@@ -398,7 +400,7 @@ class Info
 	 * Vrati informace o souborovem system
 	 * @return Obj[]
 	 */
-	protected function getFileSystem()
+	protected function getFileSystem(): array
 	{
 		$fileSystem = [];
 
@@ -426,7 +428,7 @@ class Info
 	 * Vrati informace o siti
 	 * @return Obj[]|null
 	 */
-	protected function getNetwork()
+	protected function getNetwork(): array
 	{
 		$network = [];
 

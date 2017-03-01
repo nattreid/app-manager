@@ -1,27 +1,31 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace NAttreid\AppManager\Helpers\Database;
+
+use Generator;
 
 interface IDriver
 {
 	/**
 	 * Vrati nazvy tabulek
-	 * @return string[]
+	 * @return string[]|Generator
 	 */
-	public function getTables();
+	public function getTables(): Generator;
 
 	/**
 	 * Vrati DDL tabulky
 	 * @param string $table
 	 * @return string
 	 */
-	public function getCreateTable($table);
+	public function getCreateTable(string $table): string;
 
 	/**
 	 * @param string $table
-	 * @return string[][]
+	 * @return string[][]|Generator
 	 */
-	public function getRows($table);
+	public function getRows(string $table): Generator;
 
 	/**
 	 * Smaze vsechny tabulky v databazi
@@ -32,5 +36,5 @@ interface IDriver
 	 * Nahraje databazi
 	 * @param string $file
 	 */
-	public function loadDatabase($file);
+	public function loadDatabase(string $file);
 }

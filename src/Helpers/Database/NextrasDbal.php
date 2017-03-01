@@ -1,7 +1,10 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace NAttreid\AppManager\Helpers\Database;
 
+use Generator;
 use Nextras\Dbal\Connection;
 use Nextras\Dbal\Utils\FileImporter;
 
@@ -22,9 +25,9 @@ class NextrasDbal implements IDriver
 
 	/**
 	 * Vrati nazvy tabulek
-	 * @return string[]
+	 * @return string[]|Generator
 	 */
-	public function getTables()
+	public function getTables(): Generator
 	{
 		$tables = $this->connection->getPlatform()->getTables();
 		foreach ($tables as $table) {
@@ -38,16 +41,16 @@ class NextrasDbal implements IDriver
 	 * @param string $table
 	 * @return string
 	 */
-	public function getCreateTable($table)
+	public function getCreateTable(string $table): string
 	{
 		return $this->connection->query('SHOW CREATE TABLE %table', $table)->fetch()->{'Create Table'};
 	}
 
 	/**
 	 * @param string $table
-	 * @return string[][]
+	 * @return string[][]|Generator
 	 */
-	public function getRows($table)
+	public function getRows(string $table): Generator
 	{
 		$rows = $this->connection->query('SELECT * FROM %table', $table);
 		foreach ($rows as $row) {
@@ -75,7 +78,7 @@ class NextrasDbal implements IDriver
 	 * Nahraje databazi
 	 * @param string $file
 	 */
-	public function loadDatabase($file)
+	public function loadDatabase(string $file)
 	{
 		$this->connection->transactional(function (Connection $db) use ($file) {
 			$db->query('SET foreign_key_checks = 0');

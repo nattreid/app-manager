@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace NAttreid\AppManager\Helpers;
 
 use NAttreid\AppManager\Helpers\Database\SQL;
@@ -19,9 +21,6 @@ class Backup
 	/** @var SQL */
 	private $database;
 
-	/**
-	 * Backup constructor.
-	 */
 	public function __construct(array $dirs, SQL $database)
 	{
 		$this->dirs = $dirs;
@@ -32,7 +31,7 @@ class Backup
 	 * Vrati zalohu databaze
 	 * @return TempFile
 	 */
-	public function backup()
+	public function backup(): TempFile
 	{
 		$backup[] = $this->database->backupDatabase();
 		foreach ($this->dirs as $dir) {

@@ -1,11 +1,12 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace NAttreid\AppManager\Helpers;
 
 use NAttreid\Utils\Date;
 use NAttreid\Utils\File;
 use NAttreid\Utils\Hasher;
-use NAttreid\Utils\Number;
 use NAttreid\Utils\Strings;
 use NAttreid\Utils\TempFile;
 use Nette\Application\Responses\FileResponse;
@@ -30,10 +31,10 @@ class Logs
 	/** @var Hasher */
 	private $hasher;
 
-	/** @var array */
+	/** @var Log[] */
 	private $logs;
 
-	public function __construct($path, Hasher $hasher)
+	public function __construct(string $path, Hasher $hasher)
 	{
 		if (!Strings::endsWith($path, DIRECTORY_SEPARATOR)) {
 			$path .= DIRECTORY_SEPARATOR;
@@ -44,9 +45,9 @@ class Logs
 
 	/**
 	 * Vrati seznam logu
-	 * @return array
+	 * @return Log[]
 	 */
-	public function getLogs()
+	public function getLogs(): array
 	{
 		if ($this->logs === null) {
 			$this->logs = $this->readLogs();
@@ -56,19 +57,19 @@ class Logs
 
 	/**
 	 * Vrati konkretni log
-	 * @param int $index
-	 * @return array
+	 * @param string $index
+	 * @return Log
 	 */
-	public function getLog($index)
+	public function getLog(string $index): Log
 	{
 		return $this->getLogs()[$index];
 	}
 
 	/**
 	 * Vrati seznam logu
-	 * @return array
+	 * @return Log[]
 	 */
-	private function readLogs()
+	private function readLogs(): array
 	{
 		$logs = [];
 		$dir = @dir($this->path);
@@ -80,12 +81,7 @@ class Logs
 				continue;
 			} else {
 				$hash = $this->hasher->hash($file);
-				$logs[$hash] = [
-					'id' => $hash,
-					'name' => $file,
-					'size' => Number::size(filesize($this->path . $file)),
-					'changed' => filemtime($this->path . $file)
-				];
+				$logs[$hash] = new Log($hash, $this->path, $file);
 			}
 		}
 		return $logs;
@@ -93,28 +89,28 @@ class Logs
 
 	/**
 	 * Smaze logy
-	 * @param int|array $id
+	 * @param string|array $id
 	 */
 	public function delete($id)
 	{
 		if (is_array($id)) {
 			foreach ($id as $key) {
-				unlink($this->path . $this->getLog($key)['name']);
+				unlink($this->path . $this->getLog($key)->name);
 			}
 		} else {
-			unlink($this->path . $this->getLog($id)['name']);
+			unlink($this->path . $this->getLog($id)->name);
 		}
 		$this->logs = null;
 	}
 
 	/**
 	 * Vrati soubor ke stazeni
-	 * @param int $id
+	 * @param string $id
 	 * @return FileResponse
 	 */
-	public function getFile($id)
+	public function getFile(string $id): FileResponse
 	{
-		$file = $this->getLog($id)['name'];
+		$file = $this->getLog($id)->name;
 		if (Strings::endsWith($file, '.html')) {
 			$contentType = 'text/html';
 		} else {
@@ -125,22 +121,22 @@ class Logs
 
 	/**
 	 * Vrati soubor/y ke stazeni (pokud je jich vice tak je zabali do archivu)
-	 * @param int|array $id
+	 * @param string|array $id
 	 * @return FileResponse
 	 */
-	public function downloadFile($id)
+	public function downloadFile($id): FileResponse
 	{
 		if (is_array($id)) {
 			$file = new TempFile;
 			$name = 'Logs_' . Date::getCurrentTimeStamp() . '.zip';
 			$archive = [];
 			foreach ($id as $i) {
-				$archive[] = $this->path . $this->getLog($i)['name'];
+				$archive[] = $this->path . $this->getLog($i)->name;
 			}
 			File::zip($archive, $file);
 			return new FileResponse($file, $name);
 		} else {
-			$file = $this->getLog($id)['name'];
+			$file = $this->getLog($id)->name;
 			return new FileResponse($this->path . $file, $file);
 		}
 	}
