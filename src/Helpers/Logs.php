@@ -121,7 +121,7 @@ class Logs
 
 	/**
 	 * Vrati soubor/y ke stazeni (pokud je jich vice tak je zabali do archivu)
-	 * @param string|array $id
+	 * @param string|string[] $id
 	 * @return FileResponse
 	 */
 	public function downloadFile($id): FileResponse
