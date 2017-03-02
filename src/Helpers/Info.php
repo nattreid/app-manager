@@ -58,7 +58,7 @@ class Info
 			}
 			return $result;
 		}
-		return null;
+		return '';
 	}
 
 	/**
@@ -325,7 +325,7 @@ class Info
 	 * Vrati informace o scsi
 	 * @return Obj[]
 	 */
-	private function getScsi(): array
+	private function getScsi()
 	{
 		$get_type = false;
 		$device = null;
