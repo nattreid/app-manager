@@ -7,6 +7,7 @@ namespace NAttreid\AppManager\Helpers;
 use NAttreid\Utils\Date;
 use NAttreid\Utils\Number;
 use Nette\SmartObject;
+use Nette\Utils\ArrayHash;
 use Nette\Utils\DateTime;
 
 /**
@@ -21,7 +22,7 @@ use Nette\Utils\DateTime;
  *
  * @author Attreid <attreid@gmail.com>
  */
-class Log
+class Log extends ArrayHash
 {
 	use SmartObject;
 
