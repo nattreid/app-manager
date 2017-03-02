@@ -10,9 +10,9 @@ interface IDriver
 {
 	/**
 	 * Vrati nazvy tabulek
-	 * @return string[]|Generator
+	 * @return string[]
 	 */
-	public function getTables(): Generator;
+	public function getTables();
 
 	/**
 	 * Vrati DDL tabulky
@@ -23,9 +23,9 @@ interface IDriver
 
 	/**
 	 * @param string $table
-	 * @return string[][]|Generator
+	 * @return string[][]
 	 */
-	public function getRows(string $table): Generator;
+	public function getRows(string $table);
 
 	/**
 	 * Smaze vsechny tabulky v databazi

@@ -27,15 +27,16 @@ class NetteDatabase implements IDriver
 
 	/**
 	 * Vrati nazvy tabulek
-	 * @return string[]|Generator
+	 * @return string[]
 	 */
-	public function getTables(): Generator
+	public function getTables()
 	{
-		$tables = $this->context->getStructure()->getTables();;
+		$result = [];
+		$tables = $this->context->getStructure()->getTables();
 		foreach ($tables as $table) {
-			yield $table['name'];
+			$result[] = $table['name'];
 		}
-		yield [];
+		return $result;
 	}
 
 	/**
@@ -50,16 +51,17 @@ class NetteDatabase implements IDriver
 
 	/**
 	 * @param string $table
-	 * @return string[][]|Generator
+	 * @return string[][]
 	 */
-	public function getRows(string $table): Generator
+	public function getRows(string $table)
 	{
+		$result = [];
 		$rows = $this->context->table($table);
 		/* @var $row ActiveRow */
 		foreach ($rows as $row) {
-			yield $row->toArray();
+			$result[] = $row->toArray();
 		}
-		yield [];
+		return $result;
 	}
 
 	/**

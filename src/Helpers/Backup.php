@@ -39,7 +39,7 @@ class Backup
 		}
 
 		$archive = new TempFile;
-		File::zip($backup, $archive);
+		File::zip($backup, (string)$archive);
 
 		return $archive;
 	}

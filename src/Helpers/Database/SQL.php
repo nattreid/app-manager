@@ -80,8 +80,10 @@ class SQL
 				}
 				$cols = [];
 				foreach ($row as $column) {
-					$column = addslashes($column);
-					$column = preg_replace("/\n/", "\\n", $column);
+					if (is_string($column)) {
+						$column = addslashes($column);
+						$column = preg_replace("/\n/", "\\n", $column);
+					}
 					$cols[] = '"' . $column . '"';
 				}
 				$insert[] = implode(', ', $cols);
@@ -106,7 +108,7 @@ class SQL
 	{
 		$this->check();
 		$archive = new TempFile('databaze.zip');
-		File::zip($this->backupDatabase(), $archive);
+		File::zip($this->backupDatabase(), (string)$archive);
 
 		return $archive;
 	}

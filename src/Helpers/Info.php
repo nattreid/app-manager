@@ -96,9 +96,9 @@ class Info
 		$uptime = $this->readFile('/proc/uptime', ' ');
 		if ($uptime) {
 			$system->uptime = new Obj;
-			$system->uptime->days = (int)gmdate("d", $uptime[0]) - 1;
-			$system->uptime->hours = (int)gmdate("H", $uptime[0]);
-			$system->uptime->minutes = (int)gmdate("i", $uptime[0]);
+			$system->uptime->days = (int)gmdate("d", (int)$uptime[0]) - 1;
+			$system->uptime->hours = (int)gmdate("H", (int)$uptime[0]);
+			$system->uptime->minutes = (int)gmdate("i", (int)$uptime[0]);
 		}
 
 		$users = $this->readCommand('users', ' ');
@@ -200,7 +200,7 @@ class Info
 						case 'processor':
 							$proc = trim($arrBuff[1]);
 							if (is_numeric($proc)) {
-								if (strlen($procname) > 0) {
+								if ($procname !== null && strlen($procname) > 0) {
 									$cpu->model = $procname;
 								}
 							} else {
@@ -440,10 +440,10 @@ class Info
 
 			$dev = new Obj;
 			$dev->name = trim($dev_name);
-			$dev->recieve = $stats[0];
-			$dev->sent = $stats[8];
-			$dev->error = $stats[2] + $stats[10];
-			$dev->drop = $stats[3] + $stats[11];
+			$dev->recieve = (int)$stats[0];
+			$dev->sent = (int)$stats[8];
+			$dev->error = (int)$stats[2] + (int)$stats[10];
+			$dev->drop = (int)$stats[3] + (int)$stats[11];
 
 			$ipBuff = preg_split("/\n/", $this->readCommand('ip addr show ' . $dev->name), -1, PREG_SPLIT_NO_EMPTY);
 			foreach ($ipBuff as $line) {
