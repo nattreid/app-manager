@@ -29,7 +29,7 @@ class AppManagerExtension extends CompilerExtension
 	private $defaults = [
 		'deploy' => [
 			'projectUrl' => null,
-			'ip' => null
+			'secretToken' => null
 		],
 		'backupDir' => [],
 		'appDir' => '%appDir%',
@@ -57,10 +57,10 @@ class AppManagerExtension extends CompilerExtension
 		$deploy = $config['deploy'];
 		$builder->addDefinition($this->prefix('composer'))
 			->setClass(Composer::class)
-			->setArguments([$config['appDir'], $config['tempDir'], $deploy['projectUrl'], $deploy['ip']]);
+			->setArguments([$config['appDir'], $config['tempDir'], $deploy['projectUrl'], $deploy['secretToken']]);
 		$builder->addDefinition($this->prefix('gitlab'))
 			->setClass(Gitlab::class)
-			->setArguments([$config['appDir'], $deploy['projectUrl'], $deploy['ip']]);
+			->setArguments([$config['appDir'], $deploy['projectUrl'], $deploy['secretToken']]);
 
 		$builder->addDefinition($this->prefix('appManager'))
 			->setClass(AppManager::class)

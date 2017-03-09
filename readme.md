@@ -11,7 +11,7 @@ dostupné nastavení
 appManager:
     deploy:
         projectUrl: 'gitAdresaProjektu'
-        ip: 'ipGitlabu'
+        secretToken: 'tajnyTokenProjektu'
     sessionExpiration: '14 days'
     backupDir:
         - %wwwDir%/zalohovanyAdresar

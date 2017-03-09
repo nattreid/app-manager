@@ -18,15 +18,15 @@ abstract class Deploy
 {
 
 	/** @var string */
-	private $url, $ip;
+	private $url, $secretToken;
 
 	/** @var Request */
 	private $request;
 
-	public function __construct(string $url = null, string $ip = null, Request $request)
+	public function __construct(string $url = null, string $secretToken = null, Request $request)
 	{
 		$this->url = $url;
-		$this->ip = $ip;
+		$this->secretToken = $secretToken;
 		$this->request = $request;
 	}
 
@@ -37,23 +37,23 @@ abstract class Deploy
 	 */
 	protected function checkAccess(): bool
 	{
-		if ($this->url === null || $this->ip === null) {
+		if ($this->url === null || $this->secretToken === null) {
 			throw new InvalidArgumentException('Deploy is not set');
 		}
-		$remoteAddress = $this->request->getRemoteAddress();
-		if ($remoteAddress == $this->ip) {
+		$secretToken = $this->request->getHeader('x-gitlab-token');
+		if ($secretToken == $this->secretToken) {
 			$json = file_get_contents('php://input');
 			$data = Json::decode($json);
 
 			if ($data) {
 				if (isset($data->repository->url)) {
-					if ($this->url == (string)$data->repository->url) {
+					if ($this->url === (string)$data->repository->url) {
 						return true;
 					}
 				}
 			}
 		}
-		Debugger::log('Unknown access from ' . $this->request->getRemoteHost() . '(' . $remoteAddress . ')', 'deploy');
+		Debugger::log('Unknown access from ' . $this->request->getRemoteHost() . '(' . $this->request->getRemoteAddress() . ')', 'deploy');
 		return false;
 	}
 

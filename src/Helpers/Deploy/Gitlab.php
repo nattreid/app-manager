@@ -19,9 +19,9 @@ class Gitlab extends Deploy
 	/** @var string */
 	private $path;
 
-	public function __construct(string $appDir, string $url = null, string $ip = null, Request $request)
+	public function __construct(string $appDir, string $url = null, string $secretToken = null, Request $request)
 	{
-		parent::__construct($url, $ip, $request);
+		parent::__construct($url, $secretToken, $request);
 		$this->path = $appDir . '/..';
 	}
 
