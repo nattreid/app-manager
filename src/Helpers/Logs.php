@@ -16,7 +16,7 @@ use Nette\SmartObject;
 /**
  * Sluzba logu
  *
- * @property-read array $logs
+ * @property-read Log[] $logs
  *
  * @author Attreid <attreid@gmail.com>
  */
@@ -47,7 +47,7 @@ class Logs
 	 * Vrati seznam logu
 	 * @return Log[]
 	 */
-	public function getLogs(): array
+	protected function getLogs(): array
 	{
 		if ($this->logs === null) {
 			$this->logs = $this->readLogs();
@@ -91,9 +91,13 @@ class Logs
 	 * Smaze logy
 	 * @param string|array $id
 	 */
-	public function delete($id)
+	public function delete($id = null)
 	{
-		if (is_array($id)) {
+		if ($id === null) {
+			foreach ($this->getLogs() as $log) {
+				unlink($this->path . $log->name);
+			}
+		} elseif (is_array($id)) {
 			foreach ($id as $key) {
 				unlink($this->path . $this->getLog($key)->name);
 			}
