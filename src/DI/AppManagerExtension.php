@@ -55,13 +55,12 @@ class AppManagerExtension extends CompilerExtension
 			$config['backupDir'][$key] = Helpers::expand($dir, $builder->parameters);
 		}
 
-		$deploy = $config['deploy'];
 		$builder->addDefinition($this->prefix('composer'))
 			->setClass(Composer::class)
-			->setArguments([$config['appDir'], $config['tempDir'], $deploy['deploy']]);
+			->setArguments([$config['appDir'], $config['tempDir'], $config['deploy']]);
 		$builder->addDefinition($this->prefix('gitlab'))
 			->setClass(Git::class)
-			->setArguments([$config['appDir'], $deploy['deploy']]);
+			->setArguments([$config['appDir'], $config['deploy']]);
 
 		$builder->addDefinition($this->prefix('appManager'))
 			->setClass(AppManager::class)
