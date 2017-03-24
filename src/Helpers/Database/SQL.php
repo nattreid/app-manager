@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace NAttreid\AppManager\Helpers\Database;
 
@@ -108,7 +108,7 @@ class SQL
 	{
 		$this->check();
 		$archive = new TempFile('databaze.zip');
-		File::zip($this->backupDatabase(), (string)$archive);
+		File::zip($this->backupDatabase(), (string) $archive);
 
 		return $archive;
 	}

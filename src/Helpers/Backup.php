@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace NAttreid\AppManager\Helpers;
 
@@ -39,7 +39,7 @@ class Backup
 		}
 
 		$archive = new TempFile;
-		File::zip($backup, (string)$archive);
+		File::zip($backup, (string) $archive);
 
 		return $archive;
 	}

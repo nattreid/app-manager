@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace NAttreid\AppManager\Helpers;
 
@@ -137,7 +137,7 @@ class Logs
 			foreach ($id as $i) {
 				$archive[] = $this->path . $this->getLog($i)->name;
 			}
-			File::zip($archive, $file);
+			File::zip($archive, (string) $file);
 			return new FileResponse($file, $name);
 		} else {
 			$file = $this->getLog($id)->name;

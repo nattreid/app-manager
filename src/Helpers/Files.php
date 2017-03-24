@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace NAttreid\AppManager\Helpers;
 
@@ -49,7 +49,7 @@ class Files
 				foreach (Finder::findFiles('*')
 							 ->exclude('.htaccess', 'web.config')
 							 ->in($dir) as $file) {
-					unlink((string)$file);
+					unlink((string) $file);
 				}
 			}
 		}
@@ -67,7 +67,7 @@ class Files
 		foreach (Finder::findFiles('*')->date('<', '- ' . $expiration)
 					 ->exclude('.htaccess', 'web.config')
 					 ->in($this->sessionDir) as $file) {
-			unlink((string)$file);
+			unlink((string) $file);
 		}
 	}
 
@@ -79,7 +79,7 @@ class Files
 		foreach (Finder::findFiles('*')
 					 ->exclude('.htaccess', 'web.config')
 					 ->in($this->tempDir) as $file) {
-			unlink((string)$file);
+			unlink((string) $file);
 		}
 		foreach (Finder::findDirectories('*')
 					 ->in($this->tempDir) as $dirname) {
@@ -87,14 +87,14 @@ class Files
 			foreach (Finder::findFiles('*')
 						 ->exclude('.htaccess', 'web.config')
 						 ->in($dirname) as $file) {
-				unlink((string)$file);
+				unlink((string) $file);
 			}
 			foreach (Finder::findDirectories('*')
 						 ->in($dirname) as $dir) {
-				File::removeDir((string)$dir);
+				File::removeDir((string) $dir);
 			}
-			if (File::isDirEmpty((string)$dirname)) {
-				File::removeDir((string)$dirname);
+			if (File::isDirEmpty((string) $dirname)) {
+				File::removeDir((string) $dirname);
 			}
 		}
 	}
@@ -107,7 +107,7 @@ class Files
 		foreach (Finder::findFiles('*')
 					 ->exclude('.htaccess', 'web.config')
 					 ->in($this->logDir) as $file) {
-			unlink((string)$file);
+			unlink((string) $file);
 		}
 	}
 
@@ -121,7 +121,7 @@ class Files
 				foreach (Finder::findFiles('*.css')
 							 ->exclude('.htaccess', 'web.config')
 							 ->in($dir) as $file) {
-					unlink((string)$file);
+					unlink((string) $file);
 				}
 			}
 		}
@@ -137,7 +137,7 @@ class Files
 				foreach (Finder::findFiles('*.js')
 							 ->exclude('.htaccess', 'web.config')
 							 ->in($dir) as $file) {
-					unlink((string)$file);
+					unlink((string) $file);
 				}
 			}
 		}

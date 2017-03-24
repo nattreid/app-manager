@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace NAttreid\AppManager\Helpers;
 
@@ -96,9 +96,9 @@ class Info
 		$uptime = $this->readFile('/proc/uptime', ' ');
 		if ($uptime) {
 			$system->uptime = new Obj;
-			$system->uptime->days = (int)gmdate("d", (int)$uptime[0]) - 1;
-			$system->uptime->hours = (int)gmdate("H", (int)$uptime[0]);
-			$system->uptime->minutes = (int)gmdate("i", (int)$uptime[0]);
+			$system->uptime->days = (int) gmdate("d", (int) $uptime[0]) - 1;
+			$system->uptime->hours = (int) gmdate("H", (int) $uptime[0]);
+			$system->uptime->minutes = (int) gmdate("i", (int) $uptime[0]);
 		}
 
 		$users = $this->readCommand('users', ' ');
@@ -315,7 +315,7 @@ class Info
 				$prevTotal = $prevIdle + $prevNonIdle;
 				$total = $idle + $nonIdle;
 
-				$result[$counter++]->usage = (float)(($total - $prevTotal) - ($idle - $prevIdle)) / ($total - $prevTotal) * 100;
+				$result[$counter++]->usage = (float) (($total - $prevTotal) - ($idle - $prevIdle)) / ($total - $prevTotal) * 100;
 			}
 		}
 		return $result;
@@ -440,10 +440,10 @@ class Info
 
 			$dev = new Obj;
 			$dev->name = trim($dev_name);
-			$dev->recieve = (int)$stats[0];
-			$dev->sent = (int)$stats[8];
-			$dev->error = (int)$stats[2] + (int)$stats[10];
-			$dev->drop = (int)$stats[3] + (int)$stats[11];
+			$dev->recieve = (int) $stats[0];
+			$dev->sent = (int) $stats[8];
+			$dev->error = (int) $stats[2] + (int) $stats[10];
+			$dev->drop = (int) $stats[3] + (int) $stats[11];
 
 			$ipBuff = preg_split("/\n/", $this->readCommand('ip addr show ' . $dev->name), -1, PREG_SPLIT_NO_EMPTY);
 			foreach ($ipBuff as $line) {

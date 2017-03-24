@@ -1,10 +1,9 @@
 <?php
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace NAttreid\AppManager\Helpers\Database;
 
-use Generator;
 use Nette\Database\Context;
 use Nette\Database\Helpers;
 use Nette\Database\Table\ActiveRow;
@@ -46,7 +45,7 @@ class NetteDatabase implements IDriver
 	 */
 	public function getCreateTable(string $table): string
 	{
-		return $this->context->query('SHOW CREATE TABLE ' . $table)->fetch()->{'Create Table'};
+		return (string) $this->context->query('SHOW CREATE TABLE ' . $table)->fetch()->{'Create Table'};
 	}
 
 	/**
