@@ -1,20 +1,14 @@
 {
-  "name": "nattreid/appmanager",
+  "name": "nattreid/app-manager",
   "description": "Application manager for Nette Framework",
   "type": "library",
   "license": [
-    "Unlicense"
+    "MIT"
   ],
   "authors": [
     {
       "name": "Attreid",
       "email": "attreid@gmail.com"
-    }
-  ],
-  "repositories": [
-    {
-      "type": "composer",
-      "url": "https://packages.newtravel.cz"
     }
   ],
   "require": {
@@ -26,9 +20,9 @@
     "nattreid/routing": "~1.0"
   },
   "require-dev": {
-    "nette/tester": "~1.8",
+    "nette/tester": "~1.7",
     "tracy/tracy": "~2.4",
-    "nattreid/webloader": "~2.5",
+    "attreid/webloader": "~2.5",
     "nextras/dbal": "~2.0",
     "nette/database": "~2.4"
   },
