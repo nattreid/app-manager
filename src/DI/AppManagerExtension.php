@@ -8,7 +8,7 @@ use NAttreid\AppManager\AppManager;
 use NAttreid\AppManager\Helpers\Backup;
 use NAttreid\AppManager\Helpers\Database\SQL;
 use NAttreid\AppManager\Helpers\Deploy\Composer;
-use NAttreid\AppManager\Helpers\Deploy\Gitlab;
+use NAttreid\AppManager\Helpers\Deploy\Git;
 use NAttreid\AppManager\Helpers\Files;
 use NAttreid\AppManager\Helpers\Info;
 use NAttreid\AppManager\Helpers\Logs;
@@ -29,6 +29,7 @@ class AppManagerExtension extends CompilerExtension
 	private $defaults = [
 		'deploy' => [
 			'projectUrl' => null,
+			'type' => null,
 			'secretToken' => null
 		],
 		'backupDir' => [],
@@ -59,7 +60,7 @@ class AppManagerExtension extends CompilerExtension
 			->setClass(Composer::class)
 			->setArguments([$config['appDir'], $config['tempDir'], $deploy['projectUrl'], $deploy['secretToken']]);
 		$builder->addDefinition($this->prefix('gitlab'))
-			->setClass(Gitlab::class)
+			->setClass(Git::class)
 			->setArguments([$config['appDir'], $deploy['projectUrl'], $deploy['secretToken']]);
 
 		$builder->addDefinition($this->prefix('appManager'))

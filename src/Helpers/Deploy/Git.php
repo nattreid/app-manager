@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace NAttreid\AppManager\Helpers\Deploy;
 
@@ -13,15 +13,15 @@ use Tracy\Debugger;
  *
  * @author Attreid <attreid@gmail.com>
  */
-class Gitlab extends Deploy
+class Git extends Deploy
 {
 
 	/** @var string */
 	private $path;
 
-	public function __construct(string $appDir, string $url = null, string $secretToken = null, Request $request)
+	public function __construct(string $appDir, array $options, Request $request)
 	{
-		parent::__construct($url, $secretToken, $request);
+		parent::__construct($options, $request);
 		$this->path = $appDir . '/..';
 	}
 
@@ -45,7 +45,7 @@ class Gitlab extends Deploy
 		foreach ($commands AS $command) {
 			$output = shell_exec("$command 2>&1");
 			if ($output !== null) {
-				Debugger::log($output, 'gitlab');
+				Debugger::log($output, 'git');
 			}
 		}
 	}
@@ -57,7 +57,7 @@ class Gitlab extends Deploy
 	 */
 	public function authorizedUpdate()
 	{
-		if ($this->checkAccess()) {
+		if ($this->authentication()) {
 			$this->update();
 		}
 	}

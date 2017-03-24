@@ -6,24 +6,26 @@ extensions:
     appManager: NAtrreid\AppManager\DI\AppManagerExtension
 ```
 
-dostupné nastavení
+Dostupné nastavení
 ```neon
 appManager:
     deploy:
-        projectUrl: 'gitAdresaProjektu'
-        secretToken: 'tajnyTokenProjektu'
+        projectUrl: 'homepageProjektu'
+        secretToken: 'tajnyTokenProjektu' # pro github a gitlab
+        type: 'github' # github, gitlab, bitbucket
     sessionExpiration: '14 days'
     backupDir:
         - %wwwDir%/zalohovanyAdresar
 ```
+Payload webhooks musí být **JSON**
 
-použití
+## Použití
 ```php
 /** @var \NAttreid\AppManager\AppManager @inject */
 public $app;
 ```
 
-## Údržba stránek
+### Údržba stránek
 Přidejte do **index.php**. Soubor **.maintenance.php** se zobrazí pouze když bude údžba zapnutá. Vypnout se dá přidáním parametru do url **maintenanceOff** nebo pres konzoli *php index.php maintenanceOff*
 ```php
 $maintenance = isset($maintenance) ? $maintenance : __DIR__ . '/../temp/maintenance';
@@ -37,7 +39,7 @@ if (file_exists($maintenance)) {
 }
 ```
 
-## Invalidace cache
+### Invalidace cache
 Pro invalidaci pomocí metody je třeba přidat
 ```php
 $app->onInvalideCache[]=function(){

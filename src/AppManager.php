@@ -8,7 +8,7 @@ use InvalidArgumentException;
 use NAttreid\AppManager\Helpers\Backup;
 use NAttreid\AppManager\Helpers\Database\SQL;
 use NAttreid\AppManager\Helpers\Deploy\Composer;
-use NAttreid\AppManager\Helpers\Deploy\Gitlab;
+use NAttreid\AppManager\Helpers\Deploy\Git;
 use NAttreid\AppManager\Helpers\Files;
 use NAttreid\AppManager\Helpers\Info;
 use NAttreid\AppManager\Helpers\Logs;
@@ -30,7 +30,7 @@ class AppManager
 	/** @var callable[] */
 	public $onInvalidateCache = [];
 
-	/** @var Gitlab */
+	/** @var Git */
 	private $gitlab;
 
 	/** @var Composer */
@@ -54,7 +54,7 @@ class AppManager
 	/** @var Info */
 	private $info;
 
-	public function __construct(string $tempDir, Gitlab $gitlab, Composer $composer, SQL $db, Files $files, Backup $backup, Logs $logs, Info $info)
+	public function __construct(string $tempDir, Git $gitlab, Composer $composer, SQL $db, Files $files, Backup $backup, Logs $logs, Info $info)
 	{
 		$this->tempDir = $tempDir;
 		$this->gitlab = $gitlab;

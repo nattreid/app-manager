@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace NAttreid\AppManager\Helpers\Deploy;
 
@@ -25,9 +25,9 @@ class Composer extends Deploy
 	/** @var string */
 	private $path, $tempDir;
 
-	public function __construct(string $appDir, string $tempDir, string $url = null, string $secretToken = null, Request $request)
+	public function __construct(string $appDir, string $tempDir, array $options, Request $request)
 	{
-		parent::__construct($url, $secretToken, $request);
+		parent::__construct($options, $request);
 		$this->path = $appDir . '/..';
 		$this->tempDir = $tempDir;
 	}
@@ -93,7 +93,7 @@ class Composer extends Deploy
 	 */
 	public function authorizedUpdate()
 	{
-		if ($this->checkAccess()) {
+		if ($this->authentication()) {
 			$this->update();
 		}
 	}
