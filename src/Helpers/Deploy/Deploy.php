@@ -118,8 +118,8 @@ abstract class Deploy
 		if (Strings::ipInRange($ip, '104.192.143.0/24')) {
 			$data = Json::decode($payload);
 			if ($data) {
-				if (isset($data->repository->links->html)) {
-					if ($this->url === (string) $data->repository->links->html) {
+				if (isset($data->repository->links->html->href)) {
+					if ($this->url === (string) $data->repository->links->html->href) {
 						return true;
 					}
 				}
