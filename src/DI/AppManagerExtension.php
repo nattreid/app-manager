@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace NAttreid\AppManager\DI;
 
@@ -58,10 +58,10 @@ class AppManagerExtension extends CompilerExtension
 		$deploy = $config['deploy'];
 		$builder->addDefinition($this->prefix('composer'))
 			->setClass(Composer::class)
-			->setArguments([$config['appDir'], $config['tempDir'], $deploy['projectUrl'], $deploy['secretToken']]);
+			->setArguments([$config['appDir'], $config['tempDir'], $deploy['deploy']]);
 		$builder->addDefinition($this->prefix('gitlab'))
 			->setClass(Git::class)
-			->setArguments([$config['appDir'], $deploy['projectUrl'], $deploy['secretToken']]);
+			->setArguments([$config['appDir'], $deploy['deploy']]);
 
 		$builder->addDefinition($this->prefix('appManager'))
 			->setClass(AppManager::class)
