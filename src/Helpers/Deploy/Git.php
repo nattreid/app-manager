@@ -30,8 +30,10 @@ class Git extends Deploy
 	 */
 	public function update()
 	{
+		$path = getcwd();
+		chdir($this->path);
+
 		$commands = [
-			"cd $this->path",
 			'echo $PWD',
 			'whoami',
 			'git pull',
@@ -48,6 +50,8 @@ class Git extends Deploy
 				Debugger::log($output, 'git');
 			}
 		}
+
+		chdir($path);
 	}
 
 	/**
