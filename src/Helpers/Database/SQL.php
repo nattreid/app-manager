@@ -37,7 +37,7 @@ class SQL
 	/**
 	 * @throws NotSupportedException
 	 */
-	private function check()
+	private function check(): void
 	{
 		if (!$this->isSupported) {
 			throw new NotSupportedException();
@@ -117,7 +117,7 @@ class SQL
 	 * Smaze vsechny tabulky v databazi
 	 * @throws NotSupportedException
 	 */
-	public function dropDatabase()
+	public function dropDatabase(): void
 	{
 		$this->check();
 		$this->driver->dropDatabase();
@@ -128,7 +128,7 @@ class SQL
 	 * @param string $file
 	 * @throws NotSupportedException
 	 */
-	public function loadDatabase(string $file)
+	public function loadDatabase(string $file): void
 	{
 		$this->check();
 		$this->driver->loadDatabase($file);

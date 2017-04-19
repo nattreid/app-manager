@@ -28,7 +28,7 @@ class NetteDatabase implements IDriver
 	 * Vrati nazvy tabulek
 	 * @return string[]
 	 */
-	public function getTables()
+	public function getTables(): array
 	{
 		$result = [];
 		$tables = $this->context->getStructure()->getTables();
@@ -52,7 +52,7 @@ class NetteDatabase implements IDriver
 	 * @param string $table
 	 * @return string[][]
 	 */
-	public function getRows(string $table)
+	public function getRows(string $table): array
 	{
 		$result = [];
 		$rows = $this->context->table($table);
@@ -66,7 +66,7 @@ class NetteDatabase implements IDriver
 	/**
 	 * Smaze vsechny tabulky v databazi
 	 */
-	public function dropDatabase()
+	public function dropDatabase(): void
 	{
 		$tables = $this->getTables();
 		if (!empty($tables)) {
@@ -82,7 +82,7 @@ class NetteDatabase implements IDriver
 	 * Nahraje databazi
 	 * @param string $file
 	 */
-	public function loadDatabase(string $file)
+	public function loadDatabase(string $file): void
 	{
 		Helpers::loadFromFile($this->context->getConnection(), $file);
 	}

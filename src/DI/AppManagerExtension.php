@@ -41,7 +41,7 @@ class AppManagerExtension extends CompilerExtension
 		'sessionExpiration' => '14 days',
 	];
 
-	public function loadConfiguration()
+	public function loadConfiguration(): void
 	{
 		$builder = $this->getContainerBuilder();
 		$config = $this->validateConfig($this->defaults, $this->getConfig());
@@ -88,7 +88,7 @@ class AppManagerExtension extends CompilerExtension
 			->setClass(Router::class);
 	}
 
-	public function beforeCompile()
+	public function beforeCompile(): void
 	{
 		$builder = $this->getContainerBuilder();
 		$router = $builder->getByType(RouterFactory::class);

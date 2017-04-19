@@ -128,4 +128,17 @@ abstract class Deploy
 		return false;
 	}
 
+	public abstract function update(): void;
+
+	/**
+	 * Akutalizuje pokud je pristup z povolene adresy
+	 *
+	 * @throws InvalidArgumentException
+	 */
+	public function authorizedUpdate(): void
+	{
+		if ($this->authentication()) {
+			$this->update();
+		}
+	}
 }

@@ -26,7 +26,7 @@ class NextrasDbal implements IDriver
 	 * Vrati nazvy tabulek
 	 * @return string[]
 	 */
-	public function getTables()
+	public function getTables(): array
 	{
 		$result = [];
 		$tables = $this->connection->getPlatform()->getTables();
@@ -50,7 +50,7 @@ class NextrasDbal implements IDriver
 	 * @param string $table
 	 * @return string[][]
 	 */
-	public function getRows(string $table)
+	public function getRows(string $table): array
 	{
 		$result = [];
 		$rows = $this->connection->query('SELECT * FROM %table', $table);
@@ -65,7 +65,7 @@ class NextrasDbal implements IDriver
 	/**
 	 * Smaze vsechny tabulky v databazi
 	 */
-	public function dropDatabase()
+	public function dropDatabase(): void
 	{
 		$tables = $this->getTables();
 		if (!empty($tables)) {
@@ -81,7 +81,7 @@ class NextrasDbal implements IDriver
 	 * Nahraje databazi
 	 * @param string $file
 	 */
-	public function loadDatabase(string $file)
+	public function loadDatabase(string $file): void
 	{
 		$this->connection->transactional(function (Connection $db) use ($file) {
 			$db->query('SET foreign_key_checks = 0');

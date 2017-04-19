@@ -89,7 +89,7 @@ class Logs
 
 	/**
 	 * Smaze logy
-	 * @param string|array $id
+	 * @param string|string[] $id
 	 */
 	public function delete($id = null)
 	{
@@ -102,7 +102,7 @@ class Logs
 				unlink($this->path . $this->getLog($key)->name);
 			}
 		} else {
-			unlink($this->path . $this->getLog($id)->name);
+			unlink($this->path . $this->getLog((string) $id)->name);
 		}
 		$this->logs = null;
 	}
@@ -140,7 +140,7 @@ class Logs
 			File::zip($archive, (string) $file);
 			return new FileResponse($file, $name);
 		} else {
-			$file = $this->getLog($id)->name;
+			$file = $this->getLog((string) $id)->name;
 			return new FileResponse($this->path . $file, $file);
 		}
 	}

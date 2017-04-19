@@ -41,7 +41,7 @@ class Files
 	/**
 	 * Smaze cache
 	 */
-	public function clearCache()
+	public function clearCache(): void
 	{
 		File::removeDir($this->tempDir . '/cache', false);
 		foreach ($this->webLoaderDir as $dir) {
@@ -59,7 +59,7 @@ class Files
 	 * Smazani expirovane session (default je nastaven na maximalni dobu expirace session)
 	 * @param string $expiration format 1 minutes, 14 days atd
 	 */
-	public function clearSession(string $expiration = null)
+	public function clearSession(string $expiration = null): void
 	{
 		if ($expiration === null) {
 			$expiration = $this->sessionExpiration;
@@ -74,7 +74,7 @@ class Files
 	/**
 	 * Smaze temp
 	 */
-	public function clearTemp()
+	public function clearTemp(): void
 	{
 		foreach (Finder::findFiles('*')
 					 ->exclude('.htaccess', 'web.config')
@@ -102,7 +102,7 @@ class Files
 	/**
 	 * Smazani logu
 	 */
-	public function clearLog()
+	public function clearLog(): void
 	{
 		foreach (Finder::findFiles('*')
 					 ->exclude('.htaccess', 'web.config')
@@ -114,7 +114,7 @@ class Files
 	/**
 	 * Smaze CSS cache
 	 */
-	public function clearCss()
+	public function clearCss(): void
 	{
 		foreach ($this->webLoaderDir as $dir) {
 			if (file_exists($dir)) {
@@ -130,7 +130,7 @@ class Files
 	/**
 	 * Smaze Javascript cache
 	 */
-	public function clearJs()
+	public function clearJs(): void
 	{
 		foreach ($this->webLoaderDir as $dir) {
 			if (file_exists($dir)) {

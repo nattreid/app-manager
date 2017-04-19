@@ -18,7 +18,7 @@ class DeployPresenter extends Presenter
 	/** @var AppManager */
 	private $app;
 
-	public function __construct(AppManager $app = null)
+	public function __construct(AppManager $app)
 	{
 		parent::__construct();
 		$this->app = $app;

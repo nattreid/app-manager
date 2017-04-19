@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace NAttreid\AppManager\Helpers\Deploy;
 
-use InvalidArgumentException;
 use Nette\Http\Request;
 use Tracy\Debugger;
 
@@ -71,7 +70,7 @@ class Composer extends Deploy
 	/**
 	 * Aktualizuje composer
 	 */
-	public function update()
+	public function update(): void
 	{
 		$composer = $this->getComposer();
 
@@ -85,17 +84,4 @@ class Composer extends Deploy
 			}
 		}
 	}
-
-	/**
-	 * Akutalizuje composer, pokud je pristup z povolene adresy
-	 *
-	 * @throws InvalidArgumentException
-	 */
-	public function authorizedUpdate()
-	{
-		if ($this->authentication()) {
-			$this->update();
-		}
-	}
-
 }

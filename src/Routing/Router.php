@@ -14,7 +14,7 @@ use Nette\Application\Routers\Route;
 class Router extends \NAttreid\Routing\Router
 {
 
-	public function createRoutes()
+	public function createRoutes():void
 	{
 		$router = $this->getRouter();
 

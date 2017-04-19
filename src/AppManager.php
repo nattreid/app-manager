@@ -31,7 +31,7 @@ class AppManager
 	public $onInvalidateCache = [];
 
 	/** @var Git */
-	private $gitlab;
+	private $git;
 
 	/** @var Composer */
 	private $composer;
@@ -54,10 +54,10 @@ class AppManager
 	/** @var Info */
 	private $info;
 
-	public function __construct(string $tempDir, Git $gitlab, Composer $composer, SQL $db, Files $files, Backup $backup, Logs $logs, Info $info)
+	public function __construct(string $tempDir, Git $git, Composer $composer, SQL $db, Files $files, Backup $backup, Logs $logs, Info $info)
 	{
 		$this->tempDir = $tempDir;
-		$this->gitlab = $gitlab;
+		$this->git = $git;
 		$this->composer = $composer;
 		$this->db = $db;
 		$this->files = $files;
@@ -69,7 +69,7 @@ class AppManager
 	/**
 	 * Invaliduje cache
 	 */
-	public function invalidateCache()
+	public function invalidateCache(): void
 	{
 		$this->onInvalidateCache();
 	}
@@ -77,7 +77,7 @@ class AppManager
 	/**
 	 * Smazani cache
 	 */
-	public function clearCache()
+	public function clearCache(): void
 	{
 		$this->files->clearCache();
 	}
@@ -86,7 +86,7 @@ class AppManager
 	 * Smazani expirovane session (default je nastaven na maximalni dobu expirace session)
 	 * @param string $expiration format 1 minutes, 14 days atd
 	 */
-	public function clearSession(string $expiration = null)
+	public function clearSession(string $expiration = null): void
 	{
 		$this->files->clearSession($expiration);
 	}
@@ -94,7 +94,7 @@ class AppManager
 	/**
 	 * Smaze temp
 	 */
-	public function clearTemp()
+	public function clearTemp(): void
 	{
 		$this->files->clearTemp();
 	}
@@ -102,7 +102,7 @@ class AppManager
 	/**
 	 * Smazani logu
 	 */
-	public function clearLog()
+	public function clearLog(): void
 	{
 		$this->files->clearLog();
 	}
@@ -110,7 +110,7 @@ class AppManager
 	/**
 	 * Smaze CSS cache
 	 */
-	public function clearCss()
+	public function clearCss(): void
 	{
 		$this->files->clearCss();
 	}
@@ -118,7 +118,7 @@ class AppManager
 	/**
 	 * Smaze Javascript cache
 	 */
-	public function clearJs()
+	public function clearJs(): void
 	{
 		$this->files->clearJs();
 	}
@@ -127,7 +127,7 @@ class AppManager
 	 * Zapne nebo vypne udrzbu stranek (zobrazi se stranka udrzby)
 	 * @param bool $set
 	 */
-	public function maintenance(bool $set = true)
+	public function maintenance(bool $set = true): void
 	{
 		$file = $this->tempDir . '/maintenance';
 		if ($set) {
@@ -144,7 +144,7 @@ class AppManager
 	 * @param bool $force
 	 * @throws InvalidArgumentException
 	 */
-	public function composerUpdate(bool $force = false)
+	public function composerUpdate(bool $force = false): void
 	{
 		$this->maintenance();
 		if ($force) {
@@ -160,13 +160,13 @@ class AppManager
 	 * @param bool $force
 	 * @throws InvalidArgumentException
 	 */
-	public function gitPull(bool $force = false)
+	public function gitPull(bool $force = false): void
 	{
 		$this->maintenance();
 		if ($force) {
-			$this->gitlab->update();
+			$this->git->update();
 		} else {
-			$this->gitlab->authorizedUpdate();
+			$this->git->authorizedUpdate();
 		}
 		$this->maintenance(false);
 	}
@@ -183,7 +183,7 @@ class AppManager
 	/**
 	 * Smaze vsechny tabulky v databazi
 	 */
-	public function dropDatabase()
+	public function dropDatabase(): void
 	{
 		$this->db->dropDatabase();
 	}
@@ -192,7 +192,7 @@ class AppManager
 	 * Nahraje databazi
 	 * @param string $file
 	 */
-	public function loadDatabase(string $file)
+	public function loadDatabase(string $file): void
 	{
 		$this->db->loadDatabase($file);
 	}

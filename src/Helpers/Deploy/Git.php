@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace NAttreid\AppManager\Helpers\Deploy;
 
-use InvalidArgumentException;
 use Nette\Http\Request;
 use Tracy\Debugger;
 
@@ -26,9 +25,9 @@ class Git extends Deploy
 	}
 
 	/**
-	 * Aktualizuje z gitlabu
+	 * Aktualizuje z git
 	 */
-	public function update()
+	public function update(): void
 	{
 		$path = getcwd();
 		chdir($this->path);
@@ -53,17 +52,4 @@ class Git extends Deploy
 
 		chdir($path);
 	}
-
-	/**
-	 * Akutalizuje z gitlabu, pokud je pristup z povolene adresy
-	 *
-	 * @throws InvalidArgumentException
-	 */
-	public function authorizedUpdate()
-	{
-		if ($this->authentication()) {
-			$this->update();
-		}
-	}
-
 }
