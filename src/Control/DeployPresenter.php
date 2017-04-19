@@ -27,7 +27,7 @@ class DeployPresenter extends Presenter
 	/**
 	 * Hook pro deploy z gitlabu
 	 */
-	public function actionDeploy()
+	public function actionDeploy(): void
 	{
 		$this->app->gitPull();
 		$this->app->composerUpdate();
