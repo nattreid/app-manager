@@ -99,9 +99,7 @@ class SQL
 			$backup->write("\n\n");
 		}
 
-//		return $backup;
-		echo file_get_contents((string) $backup);
-		exit;
+		return $backup;
 	}
 
 	/**
