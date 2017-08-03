@@ -83,6 +83,9 @@ class SQL
 					if (is_string($column)) {
 						$column = addslashes($column);
 						$column = preg_replace("/\n/", "\\n", $column);
+					} elseif ($column === null) {
+						$cols[] = 'NULL';
+						continue;
 					}
 					$cols[] = '"' . $column . '"';
 				}
@@ -96,7 +99,9 @@ class SQL
 			$backup->write("\n\n");
 		}
 
-		return $backup;
+//		return $backup;
+		echo file_get_contents((string) $backup);
+		exit;
 	}
 
 	/**
