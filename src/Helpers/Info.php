@@ -313,21 +313,24 @@ class Info
 		$get_type = false;
 		$device = null;
 		$scsi = [];
+		$data = $this->readFile('/proc/scsi/scsi');
 
-		$bufe = preg_split("/\n/", $this->readFile('/proc/scsi/scsi'), -1, PREG_SPLIT_NO_EMPTY);
-		foreach ($bufe as $buf) {
-			if (preg_match('/Vendor: (.*) Model: (.*) Rev: (.*)/i', $buf, $devices)) {
-				$get_type = true;
-				$device = $devices;
-				continue;
-			}
-			if ($get_type) {
-				preg_match('/Type:\s+(\S+)/i', $buf, $dev_type);
-				$dev = new Obj;
-				$dev->name = trim($device[1]) . ' ' . trim($device[2]);
-				$dev->type = trim($dev_type[1]);
-				$scsi[] = $dev;
-				$get_type = false;
+		if ($data !== null) {
+			$bufe = preg_split("/\n/", $data, -1, PREG_SPLIT_NO_EMPTY);
+			foreach ($bufe as $buf) {
+				if (preg_match('/Vendor: (.*) Model: (.*) Rev: (.*)/i', $buf, $devices)) {
+					$get_type = true;
+					$device = $devices;
+					continue;
+				}
+				if ($get_type) {
+					preg_match('/Type:\s+(\S+)/i', $buf, $dev_type);
+					$dev = new Obj;
+					$dev->name = trim($device[1]) . ' ' . trim($device[2]);
+					$dev->type = trim($dev_type[1]);
+					$scsi[] = $dev;
+					$get_type = false;
+				}
 			}
 		}
 		return $scsi;
@@ -414,31 +417,34 @@ class Info
 	protected function getNetwork(): array
 	{
 		$network = [];
+		$data = $this->readFile('/proc/net/dev');
 
-		$bufe = preg_split("/\n/", $this->readFile('/proc/net/dev'), -1, PREG_SPLIT_NO_EMPTY);
-		unset($bufe[0], $bufe[1]);
-		foreach ($bufe as $buf) {
-			list($dev_name, $stats_list) = preg_split('/:/', $buf, 2);
-			$stats = preg_split('/\s+/', trim($stats_list));
+		if ($data !== null) {
+			$bufe = preg_split("/\n/", $data, -1, PREG_SPLIT_NO_EMPTY);
+			unset($bufe[0], $bufe[1]);
+			foreach ($bufe as $buf) {
+				list($dev_name, $stats_list) = preg_split('/:/', $buf, 2);
+				$stats = preg_split('/\s+/', trim($stats_list));
 
-			$dev = new Obj;
-			$dev->name = trim($dev_name);
-			$dev->recieve = (int) $stats[0];
-			$dev->sent = (int) $stats[8];
-			$dev->error = (int) $stats[2] + (int) $stats[10];
-			$dev->drop = (int) $stats[3] + (int) $stats[11];
+				$dev = new Obj;
+				$dev->name = trim($dev_name);
+				$dev->recieve = (int) $stats[0];
+				$dev->sent = (int) $stats[8];
+				$dev->error = (int) $stats[2] + (int) $stats[10];
+				$dev->drop = (int) $stats[3] + (int) $stats[11];
 
-			$ipBuff = preg_split("/\n/", $this->readCommand('ip addr show ' . $dev->name), -1, PREG_SPLIT_NO_EMPTY);
-			foreach ($ipBuff as $line) {
-				if (preg_match('/^\s*link\/ether\s+(.*)\s+brd.*/i', $line, $ar_buf)) {
-					$dev->mac = $ar_buf[1];
-				} elseif (preg_match('/^\s*inet6\s+(.*)\/.*/i', $line, $ar_buf)) {
-					$dev->ip6 = $ar_buf[1];
-				} elseif (preg_match('/^\s*inet\s+(.*)\/.*/i', $line, $ar_buf)) {
-					$dev->ip = $ar_buf[1];
+				$ipBuff = preg_split("/\n/", $this->readCommand('ip addr show ' . $dev->name), -1, PREG_SPLIT_NO_EMPTY);
+				foreach ($ipBuff as $line) {
+					if (preg_match('/^\s*link\/ether\s+(.*)\s+brd.*/i', $line, $ar_buf)) {
+						$dev->mac = $ar_buf[1];
+					} elseif (preg_match('/^\s*inet6\s+(.*)\/.*/i', $line, $ar_buf)) {
+						$dev->ip6 = $ar_buf[1];
+					} elseif (preg_match('/^\s*inet\s+(.*)\/.*/i', $line, $ar_buf)) {
+						$dev->ip = $ar_buf[1];
+					}
 				}
+				$network[] = $dev;
 			}
-			$network[] = $dev;
 		}
 		return $network;
 	}
