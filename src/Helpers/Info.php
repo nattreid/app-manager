@@ -152,10 +152,10 @@ class Info
 			. ($board ? '/' . $board : null)
 			. ($bios ? ', BIOS ' . $bios : null)
 			. ($biosDate ? ' ' . $biosDate : null);
-
 		$hardware->cpu = $this->getCpu();
-
 		$hardware->scsi = $this->getScsi();
+
+		$hardware->data = !empty($hardware->server) || !empty($hardware->cpu) || !empty($hardware->scsi);
 
 		return $hardware;
 	}
