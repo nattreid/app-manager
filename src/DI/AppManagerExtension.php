@@ -33,6 +33,7 @@ class AppManagerExtension extends CompilerExtension
 			'secretToken' => null
 		],
 		'backupDir' => [],
+		'maxRows' => null,
 		'appDir' => '%appDir%',
 		'wwwDir' => '%wwwDir%',
 		'tempDir' => '%tempDir%',
@@ -56,36 +57,37 @@ class AppManagerExtension extends CompilerExtension
 		}
 
 		$builder->addDefinition($this->prefix('composer'))
-			->setClass(Composer::class)
+			->setType(Composer::class)
 			->setArguments([$config['appDir'], $config['tempDir'], $config['deploy']]);
 		$builder->addDefinition($this->prefix('gitlab'))
-			->setClass(Git::class)
+			->setType(Git::class)
 			->setArguments([$config['appDir'], $config['deploy']]);
 
 		$builder->addDefinition($this->prefix('appManager'))
-			->setClass(AppManager::class)
+			->setType(AppManager::class)
 			->setArguments([$config['tempDir']]);
 
 		$builder->addDefinition($this->prefix('files'))
-			->setClass(Files::class)
+			->setType(Files::class)
 			->setArguments([$config['appDir'], $config['wwwDir'], $config['tempDir'], $config['logDir'], $config['sessionDir'], $config['sessionExpiration']]);
 
 		$builder->addDefinition($this->prefix('info'))
-			->setClass(Info::class);
+			->setType(Info::class);
 
 		$builder->addDefinition($this->prefix('sql'))
-			->setClass(SQL::class);
+			->setType(SQL::class)
+			->setArguments([$config['maxRows']]);
 
 		$builder->addDefinition($this->prefix('logs'))
-			->setClass(Logs::class)
+			->setType(Logs::class)
 			->setArguments([$config['logDir']]);
 
 		$builder->addDefinition($this->prefix('backup'))
-			->setClass(Backup::class)
+			->setType(Backup::class)
 			->setArguments([$config['backupDir']]);
 
 		$builder->addDefinition($this->prefix('router'))
-			->setClass(Router::class);
+			->setType(Router::class);
 	}
 
 	public function beforeCompile(): void

@@ -23,7 +23,10 @@ class SQL
 	/** @var bool */
 	private $isSupported = true;
 
-	public function __construct(Nextras $nextras = null, Nette $nette = null)
+	/** @var int|null */
+	private $maxRows;
+
+	public function __construct(?int $maxRows, Nextras $nextras = null, Nette $nette = null)
 	{
 		if ($nextras !== null) {
 			$this->driver = new NextrasDbal($nextras);
@@ -32,6 +35,7 @@ class SQL
 		} else {
 			$this->isSupported = false;
 		}
+		$this->maxRows = $maxRows;
 	}
 
 	/**
@@ -69,8 +73,9 @@ class SQL
 			$rows = $this->driver->getRows($table);
 			$insert = [];
 			$columns = null;
+			$counter = 0;
 			foreach ($rows as $row) {
-
+				$counter++;
 				if ($columns === null) {
 					$colName = [];
 					foreach ($row as $key => $value) {
@@ -90,16 +95,25 @@ class SQL
 					$cols[] = '"' . $column . '"';
 				}
 				$insert[] = implode(', ', $cols);
-			}
 
-			if (!empty($insert)) {
-				$backup->write("INSERT INTO `$table` ($columns) VALUES\n(" . implode("),\n(", $insert) . ");\n");
+				if ($this->maxRows && $counter >= $this->maxRows) {
+					$this->writeInsert($backup, $table, $columns, $insert);
+					$counter = 0;
+					$insert = [];
+				}
 			}
-
+			$this->writeInsert($backup, $table, $columns, $insert);
 			$backup->write("\n\n");
 		}
 
 		return $backup;
+	}
+
+	private function writeInsert(TempFile $backup, string $table, ?string $columns, array $insert): void
+	{
+		if (!empty($insert) && $columns !== null) {
+			$backup->write("INSERT INTO `$table` ($columns) VALUES\n(" . implode("),\n(", $insert) . ");\n");
+		}
 	}
 
 	/**

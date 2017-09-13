@@ -14,6 +14,7 @@ appManager:
         secretToken: 'tajnyTokenProjektu' # pro github a gitlab
         type: 'github' # github, gitlab, bitbucket
     sessionExpiration: '14 days'
+    maxRows: 1000 # nebo null pro zadne omezeni insert
     backupDir:
         - %wwwDir%/zalohovanyAdresar
 ```

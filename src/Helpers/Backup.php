@@ -28,7 +28,7 @@ class Backup
 	}
 
 	/**
-	 * Vrati zalohu databaze
+	 * Vrati zalohu
 	 * @return TempFile
 	 */
 	public function backup(): TempFile
