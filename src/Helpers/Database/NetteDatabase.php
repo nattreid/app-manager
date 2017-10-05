@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace NAttreid\AppManager\Helpers\Database;
 
+use Generator;
 use Nette\Database\Context;
 use Nette\Database\Helpers;
 use Nette\Database\Table\ActiveRow;
@@ -50,17 +51,15 @@ class NetteDatabase implements IDriver
 
 	/**
 	 * @param string $table
-	 * @return string[][]
+	 * @return Generator|string[][]
 	 */
-	public function getRows(string $table): array
+	public function getRows(string $table): Generator
 	{
-		$result = [];
 		$rows = $this->context->table($table);
 		/* @var $row ActiveRow */
 		foreach ($rows as $row) {
-			$result[] = $row->toArray();
+			yield $row->toArray();
 		}
-		return $result;
 	}
 
 	/**

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace NAttreid\AppManager\Helpers\Database;
 
+use Generator;
 use Nextras\Dbal\Connection;
 use Nextras\Dbal\Utils\FileImporter;
 
@@ -48,18 +49,16 @@ class NextrasDbal implements IDriver
 
 	/**
 	 * @param string $table
-	 * @return string[][]
+	 * @return Generator|string[][]
 	 */
-	public function getRows(string $table): array
+	public function getRows(string $table): Generator
 	{
-		$result = [];
 		$rows = $this->connection->query('SELECT * FROM %table', $table);
 		if ($rows) {
 			foreach ($rows as $row) {
-				$result[] = $row->toArray();
+				yield $row->toArray();
 			}
 		}
-		return $result;
 	}
 
 	/**
