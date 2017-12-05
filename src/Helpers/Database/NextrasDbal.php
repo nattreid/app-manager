@@ -6,6 +6,7 @@ namespace NAttreid\AppManager\Helpers\Database;
 
 use Generator;
 use Nextras\Dbal\Connection;
+use Nextras\Dbal\QueryException;
 use Nextras\Dbal\Utils\FileImporter;
 
 /**
@@ -41,6 +42,7 @@ class NextrasDbal implements IDriver
 	 * Vrati DDL tabulky
 	 * @param string $table
 	 * @return string
+	 * @throws QueryException
 	 */
 	public function getCreateTable(string $table): string
 	{
@@ -50,6 +52,7 @@ class NextrasDbal implements IDriver
 	/**
 	 * @param string $table
 	 * @return Generator|string[][]
+	 * @throws QueryException
 	 */
 	public function getRows(string $table): Generator
 	{
@@ -63,6 +66,7 @@ class NextrasDbal implements IDriver
 
 	/**
 	 * Smaze vsechny tabulky v databazi
+	 * @throws QueryException
 	 */
 	public function dropDatabase(): void
 	{
@@ -79,6 +83,7 @@ class NextrasDbal implements IDriver
 	/**
 	 * Nahraje databazi
 	 * @param string $file
+	 * @throws \Exception
 	 */
 	public function loadDatabase(string $file): void
 	{

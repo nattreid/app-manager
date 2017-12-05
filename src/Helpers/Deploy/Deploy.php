@@ -8,6 +8,7 @@ use InvalidArgumentException;
 use NAttreid\Utils\Strings;
 use Nette\Http\Request;
 use Nette\Utils\Json;
+use Nette\Utils\JsonException;
 use Tracy\Debugger;
 
 /**
@@ -70,6 +71,11 @@ abstract class Deploy
 		}
 	}
 
+	/**
+	 * @param string $payload
+	 * @return bool
+	 * @throws JsonException
+	 */
 	private function authenticateGitlab(string $payload): bool
 	{
 		if ($this->secretToken === null) {
@@ -89,6 +95,11 @@ abstract class Deploy
 		return false;
 	}
 
+	/**
+	 * @param string $payload
+	 * @return bool
+	 * @throws JsonException
+	 */
 	private function authenticateGithub(string $payload): bool
 	{
 		if ($this->secretToken === null) {
@@ -111,6 +122,11 @@ abstract class Deploy
 		return false;
 	}
 
+	/**
+	 * @param string $payload
+	 * @return bool
+	 * @throws JsonException
+	 */
 	private function authenticateBitbucket(string $payload): bool
 	{
 		$ip = $this->request->getRemoteAddress();

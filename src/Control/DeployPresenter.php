@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace NAttreid\AppManager\Control;
 
 use NAttreid\AppManager\AppManager;
+use Nette\Application\AbortException;
 use Nette\Application\UI\Presenter;
 
 /**
@@ -26,12 +27,13 @@ class DeployPresenter extends Presenter
 
 	/**
 	 * Hook pro deploy z gitlabu
+	 * @throws AbortException
 	 */
 	public function actionDeploy(): void
 	{
 		$this->app->gitPull();
 		$this->app->composerUpdate();
-		$this->terminate();
+		throw new AbortException;
 	}
 
 }
