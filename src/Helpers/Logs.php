@@ -9,6 +9,7 @@ use NAttreid\Utils\File;
 use NAttreid\Utils\Hasher;
 use NAttreid\Utils\Strings;
 use NAttreid\Utils\TempFile;
+use Nette\Application\BadRequestException;
 use Nette\Application\Responses\FileResponse;
 use Nette\IOException;
 use Nette\SmartObject;
@@ -58,11 +59,11 @@ class Logs
 	/**
 	 * Vrati konkretni log
 	 * @param string $index
-	 * @return Log
+	 * @return Log|null
 	 */
-	public function getLog(string $index): Log
+	public function getLog(string $index): ?Log
 	{
-		return $this->getLogs()[$index];
+		return $this->getLogs()[$index] ?? null;
 	}
 
 	/**
@@ -110,23 +111,29 @@ class Logs
 	/**
 	 * Vrati soubor ke stazeni
 	 * @param string $id
-	 * @return FileResponse
+	 * @return FileResponse|null
+	 * @throws BadRequestException
 	 */
-	public function getFile(string $id): FileResponse
+	public function getFile(string $id): ?FileResponse
 	{
-		$file = $this->getLog($id)->name;
-		if (Strings::endsWith($file, '.html')) {
-			$contentType = 'text/html';
-		} else {
-			$contentType = 'text/plain';
+		$log = $this->getLog($id);
+		if ($log) {
+			$file = $log->name;
+			if (Strings::endsWith($file, '.html')) {
+				$contentType = 'text/html';
+			} else {
+				$contentType = 'text/plain';
+			}
+			return new FileResponse($this->path . $file, $file, $contentType, false);
 		}
-		return new FileResponse($this->path . $file, $file, $contentType, false);
+		return null;
 	}
 
 	/**
 	 * Vrati soubor/y ke stazeni (pokud je jich vice tak je zabali do archivu)
 	 * @param string|string[] $id
 	 * @return FileResponse
+	 * @throws BadRequestException
 	 */
 	public function downloadFile($id): FileResponse
 	{
@@ -135,7 +142,10 @@ class Logs
 			$name = 'Logs_' . Date::getCurrentTimeStamp() . '.zip';
 			$archive = [];
 			foreach ($id as $i) {
-				$archive[] = $this->path . $this->getLog($i)->name;
+				$log = $this->getLog($i);
+				if ($log) {
+					$archive[] = $this->path . $log->name;
+				}
 			}
 			File::zip($archive, (string) $file);
 			return new FileResponse($file, $name);
