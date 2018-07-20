@@ -390,21 +390,24 @@ class Info
 	{
 		$fileSystem = [];
 
-		$bufe = preg_split("/\n/", $this->readCommand('df -T'), -1, PREG_SPLIT_NO_EMPTY);
-		unset($bufe[0]);
-		foreach ($bufe as $buf) {
-			$data = preg_split('/\s+/', $buf);
-			$mounted = new Obj;
+		$command = $this->readCommand('df -T');
+		if ($command) {
+			$bufe = preg_split("/\n/", $command, -1, PREG_SPLIT_NO_EMPTY);
+			unset($bufe[0]);
+			foreach ($bufe as $buf) {
+				$data = preg_split('/\s+/', $buf);
+				$mounted = new Obj;
 
-			$mounted->partition = $data[0];
-			$mounted->type = $data[1];
-			$mounted->size = $data[2] * 1024;
-			$mounted->used = $data[3] * 1024;
-			$mounted->free = $data[4] * 1024;
-			$mounted->usage = $data[5];
-			$mounted->mountPoint = $data[6];
+				$mounted->partition = $data[0];
+				$mounted->type = $data[1];
+				$mounted->size = $data[2] * 1024;
+				$mounted->used = $data[3] * 1024;
+				$mounted->free = $data[4] * 1024;
+				$mounted->usage = $data[5];
+				$mounted->mountPoint = $data[6];
 
-			$fileSystem[] = $mounted;
+				$fileSystem[] = $mounted;
+			}
 		}
 
 		return $fileSystem;
