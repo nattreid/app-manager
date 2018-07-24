@@ -131,7 +131,7 @@ abstract class Deploy
 	{
 		$ip = $this->request->getRemoteAddress();
 
-		if (Strings::ipInRange($ip, '104.192.143.0/24')) {
+		if (Strings::ipInRange($ip, '18.205.93.0/25') || Strings::ipInRange($ip, '13.52.5.0/25')) {
 			$data = Json::decode($payload);
 			if ($data) {
 				if (isset($data->repository->links->html->href)) {
