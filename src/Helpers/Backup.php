@@ -29,16 +29,19 @@ class Backup
 
 	/**
 	 * Vrati zalohu
+	 * @param TempFile|null $archive
 	 * @return TempFile
 	 */
-	public function backup(): TempFile
+	public function backup(TempFile $archive = null): TempFile
 	{
 		$backup[] = $this->database->backupDatabase();
 		foreach ($this->dirs as $dir) {
 			$backup[] = $dir;
 		}
 
-		$archive = new TempFile;
+		if ($archive === null) {
+			$archive = new TempFile;
+		}
 		File::zip($backup, (string) $archive);
 
 		return $archive;

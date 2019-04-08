@@ -125,13 +125,15 @@ class SQL
 
 	/**
 	 * Vrati zabalenou zalohu databaze
+	 * @param TempFile|null $archive
 	 * @return TempFile
-	 * @throws NotSupportedException
 	 */
-	public function compressBackupDatabase(): TempFile
+	public function compressBackupDatabase(TempFile $archive = null): TempFile
 	{
 		$this->check();
-		$archive = new TempFile('databaze.zip');
+		if ($archive === null) {
+			$archive = new TempFile('databaze.zip');
+		}
 		File::zip($this->backupDatabase(), (string) $archive);
 
 		return $archive;

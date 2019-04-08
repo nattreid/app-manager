@@ -173,11 +173,12 @@ class AppManager
 
 	/**
 	 * Vrati zalohu databaze
+	 * @param TempFile|null $file
 	 * @return TempFile
 	 */
-	public function backupDatabase(): TempFile
+	public function backupDatabase(TempFile $file = null): TempFile
 	{
-		return $this->db->compressBackupDatabase();
+		return $this->db->compressBackupDatabase($file);
 	}
 
 	/**
@@ -199,11 +200,12 @@ class AppManager
 
 	/**
 	 * Vrati zalohu
+	 * @param TempFile|null $file
 	 * @return TempFile
 	 */
-	public function backup(): TempFile
+	public function backup(TempFile $file = null): TempFile
 	{
-		return $this->backup->backup();
+		return $this->backup->backup($file);
 	}
 
 	/**
