@@ -26,7 +26,10 @@ class SQL
 	/** @var int|null */
 	private $maxRows;
 
-	public function __construct(?int $maxRows, Nextras $nextras = null, Nette $nette = null)
+	/** @var string[] */
+	private $excludeTables;
+
+	public function __construct(?int $maxRows, array $excludeTables, Nextras $nextras = null, Nette $nette = null)
 	{
 		if ($nextras !== null) {
 			$this->driver = new NextrasDbal($nextras);
@@ -36,6 +39,7 @@ class SQL
 			$this->isSupported = false;
 		}
 		$this->maxRows = $maxRows;
+		$this->excludeTables = $excludeTables;
 	}
 
 	/**
@@ -65,6 +69,9 @@ class SQL
 		$backup->write("SET sql_mode = 'NO_AUTO_VALUE_ON_ZERO';\n\n\n");
 
 		foreach ($tables as $table) {
+			if (in_array($table, $this->excludeTables)) {
+				continue;
+			}
 			$backup->write("DROP TABLE IF EXISTS `$table`;\n");
 
 			$createTable = $this->driver->getCreateTable($table);

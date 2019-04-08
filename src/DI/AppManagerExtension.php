@@ -32,8 +32,11 @@ class AppManagerExtension extends CompilerExtension
 			'type' => null,
 			'secretToken' => null
 		],
-		'backupDir' => [],
-		'maxRows' => null,
+		'backup' => [
+			'dir' => [],
+			'excludeTables' => [],
+			'maxRows' => null,
+		],
 		'appDir' => '%appDir%',
 		'wwwDir' => '%wwwDir%',
 		'tempDir' => '%tempDir%',
@@ -52,7 +55,7 @@ class AppManagerExtension extends CompilerExtension
 		$config['tempDir'] = Helpers::expand($config['tempDir'], $builder->parameters);
 		$config['logDir'] = Helpers::expand($config['logDir'], $builder->parameters);
 		$config['sessionDir'] = Helpers::expand($config['sessionDir'], $builder->parameters);
-		foreach ($config['backupDir'] as $key => $dir) {
+		foreach ($config['backup']['dir'] as $key => $dir) {
 			$config['backupDir'][$key] = Helpers::expand($dir, $builder->parameters);
 		}
 
@@ -76,7 +79,7 @@ class AppManagerExtension extends CompilerExtension
 
 		$builder->addDefinition($this->prefix('sql'))
 			->setType(SQL::class)
-			->setArguments([$config['maxRows']]);
+			->setArguments([$config['backup']['maxRows'], $config['backup']['excludeTables']]);
 
 		$builder->addDefinition($this->prefix('logs'))
 			->setType(Logs::class)
@@ -84,7 +87,7 @@ class AppManagerExtension extends CompilerExtension
 
 		$builder->addDefinition($this->prefix('backup'))
 			->setType(Backup::class)
-			->setArguments([$config['backupDir']]);
+			->setArguments([$config['backup']['dir']]);
 
 		$builder->addDefinition($this->prefix('router'))
 			->setType(Router::class);
