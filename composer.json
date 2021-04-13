@@ -23,7 +23,7 @@
 	"nette/tester": "~2.2",
 	"tracy/tracy": "~2.6",
 	"attreid/webloader": "~2.5",
-	"nextras/dbal": "~3.0",
+	"nextras/dbal": "~4.0",
 	"nette/database": "~3.0"
   },
   "autoload": {
