@@ -95,9 +95,9 @@ class Info
 		$uptime = $this->readFileAsArray('/proc/uptime', ' ');
 		if ($uptime) {
 			$system->uptime = new Obj;
-			$system->uptime->days = (int) gmdate("d", (int) $uptime[0]) - 1;
-			$system->uptime->hours = (int) gmdate("H", (int) $uptime[0]);
-			$system->uptime->minutes = (int) gmdate("i", (int) $uptime[0]);
+			$system->uptime->days = (int)gmdate("d", (int)$uptime[0]) - 1;
+			$system->uptime->hours = (int)gmdate("H", (int)$uptime[0]);
+			$system->uptime->minutes = (int)gmdate("i", (int)$uptime[0]);
 		}
 
 		$system->users = $this->readCommandAsArray('users', ' ');
@@ -118,7 +118,7 @@ class Info
 	 */
 	protected function getIp(): string
 	{
-		return filter_input(INPUT_SERVER, 'SERVER_ADDR');
+		return filter_input(INPUT_SERVER, 'SERVER_ADDR') ?? 'localhost';
 	}
 
 	/**
@@ -211,7 +211,7 @@ class Info
 								break;
 							case 'l2 cache':
 							case 'cache size':
-								$cpu->cache = ((float) preg_replace("/[a-zA-Z]/", "", $arrBuff[1])) * 1024;
+								$cpu->cache = ((float)preg_replace("/[a-zA-Z]/", "", $arrBuff[1])) * 1024;
 								break;
 							case 'initial bogomips':
 							case 'bogomips':
@@ -258,15 +258,15 @@ class Info
 					}
 					// variable speed processors specific code follows
 					if ($str = $this->readFile('/sys/devices/system/cpu/cpu' . $proc . '/cpufreq/cpuinfo_cur_freq')) {
-						$cpu->speed = ((float) $str) * 1000;
+						$cpu->speed = ((float)$str) * 1000;
 					} elseif ($str = $this->readFile('/sys/devices/system/cpu/cpu' . $proc . '/cpufreq/scaling_cur_freq')) {
-						$cpu->speed = ((float) $str) * 1000;
+						$cpu->speed = ((float)$str) * 1000;
 					}
 					if ($str = $this->readFile('/sys/devices/system/cpu/cpu' . $proc . '/cpufreq/cpuinfo_max_freq')) {
-						$cpu->speedMax = ((float) $str) * 1000;
+						$cpu->speedMax = ((float)$str) * 1000;
 					}
 					if ($str = $this->readFile('/sys/devices/system/cpu/cpu' . $proc . '/cpufreq/cpuinfo_min_freq')) {
-						$cpu->speedMin = ((float) $str) * 1000;
+						$cpu->speedMin = ((float)$str) * 1000;
 					}
 					if ($str = $this->readFile('/proc/acpi/thermal_zone/THRM/temperature')) {
 						$cpu->temperature = substr($str, 25, 2);
@@ -297,7 +297,7 @@ class Info
 					$prevTotal = $prevIdle + $prevNonIdle;
 					$total = $idle + $nonIdle;
 
-					$result[$counter++]->usage = (float) (($total - $prevTotal) - ($idle - $prevIdle)) / ($total - $prevTotal) * 100;
+					$result[$counter++]->usage = (float)(($total - $prevTotal) - ($idle - $prevIdle)) / ($total - $prevTotal) * 100;
 				}
 			}
 		}
@@ -350,13 +350,13 @@ class Info
 
 			foreach ($bufer as $buf) {
 				if (preg_match('/^MemTotal:\s+(.*)\s*kB/i', $buf, $ar_buf)) {
-					$memory->total = ((float) $ar_buf[1]) * 1024;
+					$memory->total = ((float)$ar_buf[1]) * 1024;
 				} elseif (preg_match('/^MemFree:\s+(.*)\s*kB/i', $buf, $ar_buf)) {
-					$memory->free = ((float) $ar_buf[1]) * 1024;
+					$memory->free = ((float)$ar_buf[1]) * 1024;
 				} elseif (preg_match('/^Cached:\s+(.*)\s*kB/i', $buf, $ar_buf)) {
-					$memory->cache = ((float) $ar_buf[1]) * 1024;
+					$memory->cache = ((float)$ar_buf[1]) * 1024;
 				} elseif (preg_match('/^Buffers:\s+(.*)\s*kB/i', $buf, $ar_buf)) {
-					$memory->buffer = ((float) $ar_buf[1]) * 1024;
+					$memory->buffer = ((float)$ar_buf[1]) * 1024;
 				}
 			}
 			$memory->used = $memory->total - $memory->free;
@@ -431,10 +431,10 @@ class Info
 
 				$dev = new Obj;
 				$dev->name = trim($dev_name);
-				$dev->recieve = (int) $stats[0];
-				$dev->sent = (int) $stats[8];
-				$dev->error = (int) $stats[2] + (int) $stats[10];
-				$dev->drop = (int) $stats[3] + (int) $stats[11];
+				$dev->recieve = (int)$stats[0];
+				$dev->sent = (int)$stats[8];
+				$dev->error = (int)$stats[2] + (int)$stats[10];
+				$dev->drop = (int)$stats[3] + (int)$stats[11];
 
 				$ipBuff = preg_split("/\n/", $this->readCommand('ip addr show ' . $dev->name), -1, PREG_SPLIT_NO_EMPTY);
 				foreach ($ipBuff as $line) {
