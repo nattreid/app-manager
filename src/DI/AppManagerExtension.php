@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace NAttreid\AppManager\DI;
 
 use NAttreid\AppManager\AppManager;
+use NAttreid\AppManager\Control\DeployPresenter;
 use NAttreid\AppManager\Helpers\Backup;
 use NAttreid\AppManager\Helpers\Database\SQL;
 use NAttreid\AppManager\Helpers\Deploy\Composer;
@@ -17,6 +18,7 @@ use NAttreid\Routing\RouterFactory;
 use Nette\DI\CompilerExtension;
 use Nette\DI\Helpers;
 use Nette\DI\MissingServiceException;
+use Nette\DI\ServiceDefinition;
 
 /**
  * Rozsireni
@@ -104,10 +106,28 @@ class AppManagerExtension extends CompilerExtension
 			throw new MissingServiceException("Missing extension 'nattreid/routing'");
 		}
 
+		$appManager = $builder->getByType(AppManager::class);
+		foreach ($this->findByType(DeployPresenter::class) as $def) {
+			$def->addSetup('setAppManager', [$builder->getDefinition($appManager)]);
+		}
+
 		$builder->getDefinition('application.presenterFactory')
 			->addSetup('setMapping', [
 				['AppManager' => 'NAttreid\AppManager\Control\*Presenter']
 			]);
+	}
+
+	/**
+	 *
+	 * @param string $type
+	 * @return ServiceDefinition[]
+	 */
+	private function findByType(string $type): array
+	{
+		$type = ltrim($type, '\\');
+		return array_filter($this->getContainerBuilder()->getDefinitions(), function (ServiceDefinition $def) use ($type) {
+			return is_a($def->getType(), $type, true) || is_a($def->getImplement(), $type, true);
+		});
 	}
 
 }
